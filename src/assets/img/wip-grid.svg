@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 108" width="192" height="108" shape-rendering="crispEdges" font-family="monospace">
+  <rect width="192" height="108" fill="#101318"/>
+  <g stroke="#1e242e" stroke-width="1">
+    <path d="M24 12 V96 M40 12 V96 M56 12 V96 M72 12 V96 M88 12 V96 M104 12 V96 M120 12 V96 M136 12 V96 M152 12 V96 M168 12 V96"/>
+    <path d="M24 12 H168 M24 28 H168 M24 44 H168 M24 60 H168 M24 76 H168 M24 92 H168"/>
+  </g>
+  <g>
+    <rect x="40" y="44" width="16" height="16" fill="#f2a33c"/>
+    <rect x="56" y="44" width="16" height="16" fill="#e06c5f" opacity=".85"/>
+    <rect x="40" y="60" width="16" height="16" fill="#7ce38b" opacity=".8"/>
+    <rect x="88" y="28" width="16" height="16" fill="#22314c"/>
+    <rect x="104" y="44" width="32" height="16" fill="#8b95a3" opacity=".5"/>
+  </g>
+  <text x="96" y="103" text-anchor="middle" font-size="6" fill="#4a5a6e">测试色块 · 别找了 真的没有意义（有吗）</text>
+</svg>

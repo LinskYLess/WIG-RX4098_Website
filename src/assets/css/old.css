@@ -1,0 +1,59 @@
+/* ============================================================
+   old.css — /old/ 2022 v1 旧站皮肤（白底卡片风，当年审美尽力了）
+   ============================================================ */
+
+body.old-body {
+  background: #f2f0eb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23f2f0eb'/%3E%3Ccircle cx='8' cy='8' r='1' fill='%23dcd8cf'/%3E%3C/svg%3E");
+  color: #333;
+  font: 15px/1.9 "Segoe UI", "Microsoft YaHei", SimSun, serif;
+  margin: 0;
+}
+body.old-body::before, body.old-body::after { display: none; }
+
+.old-wrap { max-width: 820px; margin: 0 auto; padding: 18px 12px 40px; }
+
+.old-header { text-align: center; background: #fff; border: 1px solid #c9c4b8; padding: 18px 10px; box-shadow: 3px 3px 0 #dcd8cf; }
+.old-header h1 { color: #1c47d0; font-size: 24px; margin: 0; font-family: "Comic Sans MS", "Microsoft YaHei", cursive; text-shadow: 2px 2px 0 #ffd27a; }
+.old-sub { color: #888; font-size: 13px; margin: 6px 0 10px; }
+.old-nav { font-size: 14px; }
+.old-nav a { color: #06c; text-decoration: none; margin: 0 4px; }
+.old-nav a:hover { color: #f60; text-decoration: underline; }
+.old-count { font: 12px/1 monospace; color: #0a0; margin: 10px 0 0; }
+
+.old-card { background: #fff; border: 1px solid #c9c4b8; margin: 14px 0; padding: 14px 18px; box-shadow: 3px 3px 0 #dcd8cf; }
+.old-card h2 { font-size: 17px; color: #1c47d0; border-bottom: 2px dotted #ffd27a; padding-bottom: 4px; margin: 0 0 10px; }
+.old-card p, .old-card li { font-size: 14.5px; color: #444; }
+.old-card a { color: #06c; }
+
+.old-footer { text-align: center; color: #999; font-size: 12px; margin-top: 20px; }
+.old-footer img { vertical-align: middle; margin: 0 3px; }
+
+.old-hr { border: none; border-top: 1px dashed #bbb; margin: 12px 0; }
+
+/* v1 时代的门 */
+.old-gate { background: #fffbe6; border: 1px solid #e8d48a; padding: 12px 14px; margin: 12px 0; font-size: 14px; }
+.old-gate input { font: 14px monospace; padding: 4px 6px; border: 2px inset #ccc; }
+.old-gate .btn, .old-card .btn {
+  font: 13px "Microsoft YaHei"; padding: 4px 14px; cursor: pointer;
+  background: #eee; border: 2px outset #ccc; color: #222;
+}
+.old-gate .btn:active, .old-card .btn:active { border-style: inset; }
+
+/* 解锁后的 wiki 表格风 */
+.old-wiki h2 { border-bottom: 1px solid #ddd; }
+.old-wiki pre { background: #f6f6f6; border: 1px solid #ddd; padding: 10px 12px; font-size: 12.5px; overflow-x: auto; }
+.old-wiki table { border-collapse: collapse; font-size: 13.5px; }
+.old-wiki th, .old-wiki td { border: 1px solid #ccc; padding: 5px 9px; }
+
+.old-gate .gate-hint button, .gate-hint button { background: none; border: none; color: #06c; cursor: pointer; font-size: 13px; text-decoration: underline; padding: 0; }
+
+/* 门组件（旧皮肤语境） */
+.old-body .gate { background: #fffbe6; border: 1px solid #e8d48a; padding: 12px 14px; margin: 12px 0; }
+.old-body .gate-title { font: bold 13px "Microsoft YaHei"; color: #7a5c00; margin-bottom: 6px; }
+.old-body .gate input[type="text"] { font: 14px monospace; padding: 4px 6px; border: 2px inset #ccc; background: #fff; color: #111; }
+.old-body .gate .btn { background: #eee; border: 2px outset #ccc; color: #222; cursor: pointer; font: 13px "Microsoft YaHei"; padding: 4px 14px; }
+.old-body .gate .btn:active { border-style: inset; }
+.old-body .block-slot { display: none; margin-top: 10px; }
+.old-body .block-slot.open { display: block; }
+.old-body .gate-hint-text { color: #777; font-size: 12.5px; }
+.old-body .term-overlay, #term-fab { display: none !important; }

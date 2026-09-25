@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="31" viewBox="0 0 88 31" shape-rendering="crispEdges">
+  <rect width="88" height="31" fill="#1a1a1a"/>
+  <rect x="1" y="1" width="86" height="29" fill="none" stroke="#7ce38b" stroke-width="1"/>
+  <text x="8" y="13" font-family="monospace" font-size="8" fill="#7ce38b">&lt;HTML&gt;</text>
+  <text x="8" y="24" font-family="monospace" font-size="8" fill="#8b95a3">hand-made</text>
+  <rect x="64" y="8" width="14" height="14" fill="none" stroke="#7ce38b"/>
+  <path d="M64 8 l14 14" stroke="#7ce38b" stroke-width="1"/>
+</svg>

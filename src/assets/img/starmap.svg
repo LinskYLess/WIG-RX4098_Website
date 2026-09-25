@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 108" width="192" height="108" shape-rendering="crispEdges" font-family="monospace">
+  <rect width="192" height="108" fill="#060a12"/>
+  <g fill="#dfe6f2">
+    <circle cx="24" cy="20" r="1"/><circle cx="40" cy="34" r="1.4"/><circle cx="58" cy="14" r="1"/><circle cx="70" cy="42" r="1"/>
+    <circle cx="88" cy="26" r="1.6"/><circle cx="104" cy="12" r="1"/><circle cx="118" cy="38" r="1"/><circle cx="132" cy="20" r="1.4"/>
+    <circle cx="150" cy="30" r="1"/><circle cx="166" cy="16" r="1"/><circle cx="176" cy="44" r="1.2"/><circle cx="30" cy="52" r="1"/>
+    <circle cx="96" cy="52" r="1"/><circle cx="140" cy="54" r="1"/>
+  </g>
+  <circle cx="88" cy="26" r="4" fill="none" stroke="#f2a33c" stroke-width=".8" opacity=".8"/>
+  <path d="M24 20 L40 34 L58 14 L70 42 L88 26 L104 12 L118 38 L132 20 L150 30" fill="none" stroke="#33415a" stroke-width=".7"/>
+  <g stroke="#22304a" stroke-width=".6"><path d="M0 60 H192 M0 72 H192 M0 84 H192" opacity=".5"/></g>
+  <g fill="#33415a" font-size="4.5">
+    <text x="6" y="58">RA 06h</text><text x="6" y="70">RA 09h</text><text x="6" y="82">RA 12h</text>
+    <text x="150" y="58">DEC +22</text><text x="150" y="70">DEC +08</text>
+  </g>
+  <text x="96" y="101" text-anchor="middle" font-size="6" fill="#4a5a6e">2019-06-21 23:30 +08 · 那天的天（真实描摹）</text>
+</svg>

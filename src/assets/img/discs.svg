@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 108" width="192" height="108" shape-rendering="crispEdges">
+  <rect width="192" height="108" fill="#191d24"/>
+  <rect x="0" y="88" width="192" height="20" fill="#12151b"/>
+  <g>
+    <g transform="translate(24,20)"><rect width="30" height="60" fill="#2c313c"/><rect x="3" y="4" width="24" height="44" fill="#c8ccd4"/><circle cx="15" cy="26" r="6" fill="#191d24"/><rect x="3" y="52" width="24" height="5" fill="#7ce38b" opacity=".4"/></g>
+    <g transform="translate(62,20)"><rect width="30" height="60" fill="#2c313c"/><rect x="3" y="4" width="24" height="44" fill="#d4c8b0"/><circle cx="15" cy="26" r="6" fill="#191d24"/><rect x="3" y="52" width="24" height="5" fill="#f2a33c" opacity=".4"/></g>
+    <g transform="translate(100,20)"><rect width="30" height="60" fill="#2c313c"/><rect x="3" y="4" width="24" height="44" fill="#b8c4cc"/><circle cx="15" cy="26" r="6" fill="#191d24"/><rect x="3" y="52" width="24" height="5" fill="#7cb4e3" opacity=".4"/></g>
+    <g transform="translate(138,20)"><rect width="30" height="60" fill="#2c313c"/><rect x="3" y="4" width="24" height="44" fill="#c4ccbc"/><circle cx="15" cy="26" r="6" fill="#191d24"/><rect x="3" y="52" width="24" height="5" fill="#e06c5f" opacity=".4"/></g>
+  </g>
+  <g stroke="#39404c" stroke-width="1"><line x1="55" y1="16" x2="55" y2="86"/><line x1="93" y1="16" x2="93" y2="86"/><line x1="131" y1="16" x2="131" y2="86"/></g>
+  <text x="96" y="102" text-anchor="middle" font-family="monospace" font-size="6" fill="#4a5a6e">41 DISCS · SHA-256 VERIFIED</text>
+</svg>

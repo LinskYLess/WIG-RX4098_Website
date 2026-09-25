@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="31" viewBox="0 0 88 31" shape-rendering="crispEdges">
+  <rect width="88" height="31" fill="#12234f"/>
+  <rect x="1" y="1" width="86" height="29" fill="none" stroke="#3f6ae0" stroke-width="1"/>
+  <circle cx="12" cy="15" r="4" fill="#f2a33c"/>
+  <rect x="11" y="19" width="2" height="4" fill="#8b95a3"/>
+  <text x="24" y="13" font-family="monospace" font-size="9" fill="#ffd27a">旧网环</text>
+  <text x="24" y="24" font-family="monospace" font-size="8" fill="#9fb4e8">WEBring v7</text>
+</svg>

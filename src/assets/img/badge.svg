@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 108" width="192" height="108" shape-rendering="crispEdges" font-family="monospace">
+  <rect width="192" height="108" fill="#0e1626"/>
+  <circle cx="96" cy="54" r="40" fill="#12203a" stroke="#f2a33c" stroke-width="2"/>
+  <circle cx="96" cy="54" r="34" fill="none" stroke="#2c4468" stroke-width="1"/>
+  <rect x="93" y="52" width="6" height="18" fill="#5b6068"/>
+  <rect x="86" y="70" width="20" height="4" fill="#39404c"/>
+  <rect x="90" y="38" width="12" height="6" fill="#22314c"/>
+  <circle cx="96" cy="41" r="3" fill="#f2a33c">
+    <animate attributeName="opacity" values=".6;1;.6" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M60 34 l10 8 M132 34 l-10 8" stroke="#f2a33c" stroke-width="1.4" opacity=".7"/>
+  <text x="96" y="88" text-anchor="middle" font-size="7" fill="#ffd27a">守灯人 · 2 人公会</text>
+  <text x="96" y="98" text-anchor="middle" font-size="5" fill="#4a5a6e">EST. 2015 · SERVER CHENZHU</text>
+</svg>

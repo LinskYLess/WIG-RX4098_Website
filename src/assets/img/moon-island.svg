@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 108" width="192" height="108" shape-rendering="crispEdges" font-family="monospace">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a1226"/><stop offset=".7" stop-color="#14264a"/><stop offset="1" stop-color="#1e3a66"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="108" fill="url(#sky)"/>
+  <g fill="#dfe6f2">
+    <rect x="12" y="10" width="1" height="1"/><rect x="30" y="22" width="1" height="1"/><rect x="55" y="8" width="1" height="1"/>
+    <rect x="80" y="18" width="1" height="1"/><rect x="99" y="6" width="1" height="1"/><rect x="170" y="14" width="1" height="1"/>
+    <rect x="20" y="40" width="1" height="1"/><rect x="60" y="34" width="1" height="1"/><rect x="120" y="9" width="1" height="1"/>
+  </g>
+  <circle cx="138" cy="30" r="16" fill="#f2e8c8"/>
+  <circle cx="133" cy="26" r="3" fill="#e4d6ac"/><circle cx="142" cy="34" r="2" fill="#e4d6ac"/><circle cx="141" cy="24" r="1.4" fill="#e4d6ac"/>
+  <circle cx="138" cy="30" r="18" fill="none" stroke="#f2e8c8" stroke-opacity=".25" stroke-width="2"/>
+  <rect x="0" y="78" width="192" height="30" fill="#0a1826"/>
+  <path d="M116 79 h44 q-4 3 0 6 h-44 q4-3 0-6z" fill="#6e6444" opacity=".55"/>
+  <path d="M120 88 h36 q-3 2 0 4 h-36 q3-2 0-4z" fill="#6e6444" opacity=".35"/>
+  <path d="M124 96 h28 v2 h-28z" fill="#6e6444" opacity=".25"/>
+  <path d="M18 80 q22-9 44-4 q26 5 40-2 q14-6 16-2 l0 8 -100 0z" fill="#05080c"/>
+  <rect x="64" y="40" width="10" height="22" fill="#0a0a0e"/>
+  <rect x="62" y="36" width="14" height="4" fill="#101014"/>
+  <rect x="66" y="42" width="6" height="5" fill="#f2a33c">
+    <animate attributeName="opacity" values="1;.6;1" dur="3.2s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="64" y="56" width="10" height="1" fill="#1c1c24"/><rect x="64" y="50" width="10" height="1" fill="#1c1c24"/>
+  <text x="188" y="103" text-anchor="end" font-size="6.5" fill="#cfc39a" opacity=".8" transform="rotate(-2 188 103)">621, 621</text>
+</svg>
