@@ -20,6 +20,7 @@ import { writeAssets } from './gen-assets.mjs';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const DIST = join(ROOT, 'dist');
+const SITE_URL = 'https://rx4098.dpdns.org';
 
 /* ---------- 1. 清空与重建 dist ---------- */
 rmSync(DIST, { recursive: true, force: true });
@@ -28,10 +29,16 @@ mkdirSync(DIST, { recursive: true });
 /* ---------- 2. 渲染页面 ---------- */
 let pageCount = 0;
 for (const page of PAGES) {
-  const html = await page.render();
+  let html = await page.render();
   if (typeof html !== 'string' || !html) {
     console.error(`[build] 页面渲染失败（返回空）：${page.out}`);
     process.exit(1);
+  }
+  // SEO：canonical + og:url（404 页不参与索引，跳过）
+  if (page.out !== '404.html') {
+    const urlPath = page.out === 'index.html' ? '/' : `/${page.out.replace(/index\.html$/, '')}`;
+    const seoTags = `<link rel="canonical" href="${SITE_URL}${urlPath}">\n<meta property="og:url" content="${SITE_URL}${urlPath}">`;
+    html = html.replace('</head>', `${seoTags}\n</head>`);
   }
   const out = join(DIST, page.out);
   mkdirSync(dirname(out), { recursive: true });
@@ -72,14 +79,14 @@ Disallow: /old/relight/
 Disallow: /tmp/
 Disallow: /dump/
 
-Sitemap: /sitemap.xml
+Sitemap: ${SITE_URL}/sitemap.xml
 `);
 
-const publicUrls = ['', 'about/', 'blog/', 'games/', 'gear/', 'gallery/', 'archive/', 'links/', 'guestbook/', 'contact/', 'now/', 'search/', 'backup/'];
+const publicUrls = ['', 'about/', 'blog/', 'games/', 'gear/', 'gallery/', 'archive/', 'links/', 'guestbook/', 'contact/', 'now/', 'search/', 'backup/', 'license/'];
 const today = new Date().toISOString().slice(0, 10);
 writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${publicUrls.map((u) => `  <url><loc>/${u}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+${publicUrls.map((u) => `  <url><loc>${SITE_URL}/${u}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
 </urlset>
 `);
 
@@ -240,6 +247,7 @@ const indexDocs = [
   ...ITEMS.map((i) => ({ url: '/gallery/', title: i.title, summary: i.desc, text: `${i.desc} ${i.date ?? ''}` })),
   ...FILES.map((f) => ({ url: '/archive/', title: f.path, summary: `归档文件 · ${f.mtime}`, text: f.encrypted ? '加密文件 需要口令' : strip(f.content).slice(0, 600) })),
   { url: '/now/', title: '现在', summary: '此刻在做的事', text: '芙莉莲 异星工厂 RSS 树莓派' },
+  { url: '/license/', title: '声明 · License', summary: 'ARG 虚构声明 / MIT 开源 / GitHub 仓库', text: '声明 license MIT 开源 GitHub 仓库 虚构 ARG 版权' },
   { url: '/links/', title: '友链与收藏', summary: 'wering 朋友们的站', text: '旧网环 webring 友链 收藏' },
   { url: '/guestbook/', title: '留言板', summary: '老规矩：随便写', text: '留言 心跳 robots' },
   { url: '/about/', title: '关于我', summary: 'RX4098 = 任霄', text: '运维 装机 抓包 2014 2019 2022' },

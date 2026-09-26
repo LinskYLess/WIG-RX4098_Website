@@ -49,7 +49,7 @@ ${entries}
     <p><input type="text" name="name" placeholder="怎么称呼你" style="width:100%"></p>
     <p><textarea name="text" rows="3" placeholder="说点什么……（支持灯语）" style="width:100%"></textarea></p>
     <button class="btn primary" type="submit">提交</button>
-    <span class="tiny" style="color:#555"> （无后端，留言只保存在你的浏览器里。这也是一种隐私）</span>
+    <span class="tiny" style="color:#444"> （无后端，留言只保存在你的浏览器里。这也是一种隐私）</span>
   </div>
 </form>
 <div id="gb-list" style="margin-top:20px"></div>`;

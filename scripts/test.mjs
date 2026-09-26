@@ -136,18 +136,20 @@ t('conf/终止 = 2026-10-01', beaconLog.includes('terminate=2026-10-01T00:00:00+
 t('草稿系列含 2026-06-25（回信后）', /** @type {{date:string}} */ (DRAFTS.at(-1)).date === '2026-06-25');
 
 console.log('\n== 7. 产物完整性 ==');
-t('35 个入口页', allHtml.filter((f) => f.split(/[\\/]/).pop() === 'index.html').length === 35,
+t('36 个入口页', allHtml.filter((f) => f.split(/[\\/]/).pop() === 'index.html').length === 36,
   String(allHtml.filter((f) => f.split(/[\\/]/).pop() === 'index.html').length));
 t('robots.txt', readFileSync(join(DIST, 'robots.txt'), 'utf8').includes('Disallow: /system/'));
 const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
-t('sitemap 含 /backup/ 不含 /system/', sitemap.includes('/backup/') && !sitemap.includes('/system/'));
+t('sitemap 含 /backup/ 与 /license/，不含 /system/', sitemap.includes('/backup/') && sitemap.includes('/license/') && !sitemap.includes('/system/'));
+t('sitemap 为绝对地址（含部署域名）', sitemap.includes('https://rx4098.dpdns.org/') && !sitemap.includes('<loc>/'));
+t('产物无 rx4098.example 残留', !walkHtml(DIST).some((f) => readFileSync(f, 'utf8').includes('rx4098.example')));
 const idx = JSON.parse(readFileSync(join(DIST, 'search', 'index.json'), 'utf8'));
 t('搜索索引非空', idx.length >= 25, String(idx.length));
 t('PNG 带 tEXt 坐标', readFileSync(join(DIST, 'gallery', 'moon-island.png')).includes(Buffer.from('X:621 Y:621')));
 t('WAV 生成', existsSync(join(DIST, 'tmp', 'signal-test.wav')));
 t('pcap 红鲱鱼', readFileSync(join(DIST, 'tmp', 'pcap-test.pcap')).slice(0, 4).readUInt32LE(0) === 0xa1b2c3d4);
 t('humans.txt', existsSync(join(DIST, '.well-known', 'humans.txt')));
-for (const p of ['old/index.html', 'system/index.html', 'fragment/index.html', 'relight/index.html', 'relight/end/index.html', '404.html']) {
+for (const p of ['old/index.html', 'system/index.html', 'fragment/index.html', 'relight/index.html', 'relight/end/index.html', 'license/index.html', '404.html']) {
   t(`存在 ${p}`, existsSync(join(DIST, p)));
 }
 // 所有页面引用的模块脚本均存在
@@ -159,6 +161,9 @@ for (const f of allHtml) {
   }
 }
 t('客户端模块引用完整', scriptMiss === 0, String(scriptMiss));
+// 终端命令分发必须展开参数（历史 bug：fn(args) 让 unlock/hint/reset 拿不到参数）
+const termCode = readFileSync(join(DIST, 'assets', 'js', 'terminal.mjs'), 'utf8');
+t('终端命令分发带参数展开（unlock/hint 可用）', termCode.includes('fn(...args)') && !/\bfn\(args\)/.test(termCode));
 
 console.log(`\n结果: ${pass} 通过 / ${fail} 失败`);
 if (fail) {

@@ -184,15 +184,20 @@ li { margin: 4px 0; }
 }
 .win-title {
   background: linear-gradient(90deg, #12234f, #2b56c8 70%, #3f6ae0);
-  color: #fff; font: bold 12.5px/1 var(--sans); padding: 5px 8px;
+  color: #fff; font: bold 13.5px/1.2 var(--sans); padding: 6px 10px;
   display: flex; justify-content: space-between; align-items: center;
-  letter-spacing: .5px;
+  letter-spacing: .5px; text-shadow: 0 1px 2px rgba(0, 0, 0, .45);
 }
 .win-title .win-btns i { font-style: normal; margin-left: 4px; background: var(--win-face); color: #000; padding: 0 4px; border: 1px solid; border-color: #fff #555 #555 #fff; }
-.win-body { padding: 14px 16px; font: 13.5px/1.7 var(--sans); }
+.win-body { padding: 14px 16px; font: 14.5px/1.75 var(--sans); }
 .win-body p { margin: 0 0 8px; }
 .win-body a { color: #1c47d0; }
 .win-body code { background: #efede7; border-color: #c8c4ba; color: #7a2f0e; }
+/* 亮色窗口里的 pre：沿用暗色主题会变成浅灰字配浅灰底，必须翻转成深墨色 */
+.win-body pre {
+  background: transparent; border: none; border-left: none;
+  color: #26221b; font: 13.5px/1.8 var(--mono); margin: 4px 0;
+}
 
 /* 9x 按钮/输入（暗页 & 亮窗两态） */
 .btn {
@@ -246,22 +251,35 @@ body[data-arg-stage="6"] .keeper-hide { display: none; }
 
 .terminal {
   background: #04070a; border: 1px solid var(--line); border-radius: var(--radius);
-  font: 13px/1.8 var(--mono); color: var(--green);
-  padding: 12px 14px; min-height: 220px; max-height: 420px; overflow-y: auto;
+  font: 14px/1.8 var(--mono); color: var(--green);
+  text-shadow: 0 0 7px rgba(124, 227, 139, .28);
+  padding: 12px 14px; min-height: 280px; max-height: 500px; overflow-y: auto;
   position: relative;
 }
 .terminal::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: repeating-linear-gradient(0deg, rgba(124,227,139,0.04) 0 2px, transparent 2px 4px);
 }
-.terminal .t-in { color: #d9dfe7; }
-.terminal .t-dim { color: #4a5a4f; }
+.terminal .t-in { color: #d9dfe7; text-shadow: none; }
+.terminal .t-dim { color: #5d7364; }
 .terminal .t-amber { color: var(--amber); }
 .terminal .t-err { color: var(--red); }
 .terminal .t-cursor { animation: blink 1s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
-.terminal-input { display: flex; gap: 8px; margin-top: 8px; }
-.terminal-input input { flex: 1; background: transparent; border: none; border-bottom: 1px dashed var(--green-dim); color: var(--green); font-family: var(--mono); }
+/* 输入行贴着终端排：同一块深色底。放在浅色窗口背景上的话，
+   绿色字会直接糊进 WinXP 的灰脸里，什么都看不清 */
+.term-shell .terminal { border-bottom: none; border-radius: 2px 2px 0 0; }
+.terminal-input {
+  display: flex; gap: 8px; margin-top: 0;
+  background: #04070a; border: 1px solid var(--line); border-top: none;
+  border-radius: 0 0 2px 2px; padding: 8px 14px 10px;
+}
+.terminal-input .t-prompt { color: var(--green); opacity: .8; font: 15px/1.7 var(--mono); white-space: nowrap; text-shadow: 0 0 7px rgba(124, 227, 139, .28); }
+.terminal-input input {
+  flex: 1; min-width: 0; background: transparent; border: none; border-bottom: 1px dashed var(--green-dim);
+  color: #b5f7c0; caret-color: var(--green); font: 15px/1.7 var(--mono);
+  text-shadow: 0 0 7px rgba(124, 227, 139, .3); padding: 0 2px;
+}
 .terminal-input input:focus { outline: none; }
 
 /* 浮动终端按钮 */
@@ -375,9 +393,9 @@ figure.gallery-item figcaption b { color: var(--ink); font-size: 13.5px; display
 }
 
 /* ---------------- 终端悬浮层 / 归档树 / 搜索 / 面板增补 ---------------- */
-.term-overlay { position: fixed; right: 18px; bottom: 74px; z-index: 1000; display: none; width: min(680px, calc(100vw - 36px)); }
+.term-overlay { position: fixed; right: 18px; bottom: 74px; z-index: 1000; display: none; width: min(860px, calc(100vw - 36px)); }
 .term-overlay.open { display: block; animation: toast-in .2s; }
-.term-win .terminal { max-height: 320px; min-height: 240px; }
+.term-win .terminal { max-height: 440px; min-height: 300px; }
 
 #arch-tree .arch-dir { font: 12px var(--mono); color: var(--amber); margin: 10px 0 4px; letter-spacing: 1px; }
 #arch-tree .arch-file {
@@ -394,6 +412,8 @@ figure.gallery-item figcaption b { color: var(--ink); font-size: 13.5px; display
 .dc-form input { width: 130px; }
 .search-app input[type="search"] { width: min(420px, 100%); }
 .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+/* 面板里横贯整行的窗口（终端等需要宽度的组件） */
+.panel-grid .win-span { grid-column: 1 / -1; }
 
 /* 系统解锁瞬间的信号噪声转场（0.4s，一次性） */
 @keyframes signal-flash {

@@ -30,7 +30,7 @@ export function renderOldIndex() {
   <h2>友情链接</h2>
   <p><a href="https://midnight-wave.example/" rel="nofollow">午夜电波</a> · <a href="https://slowlemon.example/" rel="nofollow">慢速柠檬</a> · 更多见新站</p>
 </div>
-<marquee style="color:#e80;font-size:12px">★ 欢迎光临 ★ 本站永久域名 rx4098.example ★ 记得常来 ★</marquee>`;
+<marquee style="color:#e80;font-size:12px">★ 欢迎光临 ★ 本站永久域名 rx4098.dpdns.org ★ 记得常来 ★</marquee>`;
 
   return layoutOld({
     title: '首页',

@@ -22,7 +22,7 @@ export const BOOKMARKS = [
 ];
 
 export const TOOLS = [
-  { name: 'RSS 阅读器（自建 miniflux）', url: 'https://rss.rx4098.example/', note: '反算法抵抗军基地' },
+  { name: 'RSS 阅读器（自建）', url: 'https://rx4098.dpdns.org/', note: '反算法抵抗军基地' },
   { name: 'Morse in-browser', url: 'https://morse.example/tool', note: '备用。本站终端也有 morse 命令' },
   { name: 'down for everyone', url: 'https://isfown.example/', note: '查死链用。友情提示：查本站会显示 alive' },
 ];

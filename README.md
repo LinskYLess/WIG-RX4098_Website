@@ -35,10 +35,10 @@ npm start          # 等价于 npm run build && npm run serve
 ```bash
 npm run build      # 产物输出到 dist/
 npm run check      # TypeScript 类型门禁（tsc --checkJs，双 tsconfig）
-npm test           # 构建 + 92 项自动化测试（门判定/载荷/金丝雀防剧透/时间戳/产物完整性）
+npm test           # 构建 + 自动化测试（门判定/载荷/金丝雀防剧透/时间戳/产物完整性）
 ```
 
-构建过程：渲染 35 个入口页 → 复制静态资产 → 写 robots/sitemap/manifest/humans.txt →
+构建过程：渲染 36 个入口页 → 复制静态资产 → 写 robots/sitemap/manifest/humans.txt →
 XOR 加密档案与页面载荷 → 生成心跳日志（6h 周期，保证"最近心跳"永远新鲜）→
 生成二进制资产（带 tEXt 元数据的 PNG、摩斯 WAV、pcap 红鲱鱼）→ 内链爬取检查 → 防剧透金丝雀检查。
 
@@ -72,7 +72,7 @@ scripts/
   build.mjs              零依赖静态站点生成器
   serve.mjs              零依赖静态服务器
   gen-assets.mjs         PNG（zlib+tEXt）/ WAV 手写编码器
-  test.mjs               自动化测试（92 项）
+  test.mjs               自动化测试
 src/
   arg/                   ARG 核心（同构）：cipher / normalize / puzzles
   content/               全部内容数据：博客 / 游戏 / 装备 / 图库 / 档案 / 日志 / 碎片 / 留言板
@@ -96,3 +96,8 @@ src/
   "用玩家答案作为 XOR 密钥解出 `RX4098::OK` 标记"，无哈希、无明文（硬核玩家可破——这是特性）；
 - 灯语音频：Web Audio 运行时合成 + 构建期 WAV 生成共用同一时序模块；
 - 无后端、无跟踪、无统计——"这个站的浪漫全靠你自己"。
+
+## 许可证
+
+本项目以 [MIT License](LICENSE) 开源。站内叙事（人物、公司、游戏、事件）均为虚构，与任何真实人物或事件无关；
+虚构声明、许可与仓库链接亦见站内 `/license/` 页面。

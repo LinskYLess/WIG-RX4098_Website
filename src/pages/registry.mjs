@@ -25,6 +25,7 @@ export const PAGES = [
   { out: 'contact/index.html', render: () => info.renderContact() },
   { out: 'links/index.html', render: () => info.renderLinks() },
   { out: 'links/dead/index.html', render: () => info.renderDead() },
+  { out: 'license/index.html', render: () => info.renderLicense() },
   { out: 'blog/index.html', render: () => blog.renderList() },
   ...POSTS.map((p) => ({ out: `blog/${p.slug}/index.html`, render: () => blog.renderPost(p.slug) })),
   { out: 'games/index.html', render: () => col.renderGames() },

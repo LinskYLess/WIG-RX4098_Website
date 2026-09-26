@@ -59,7 +59,7 @@ export function renderNow() {
   <li>在学：现代前端（学完就忘，忘完再学）</li>
   <li>在值守：一台树莓派。它比我勤快</li>
 </ul>
-<p>此页灵感来自 <a href="https://nownownow.com/" rel="nofollow">/now page movement</a>（嗯，这个链接是真的的风格的虚构，别点）</p>`;
+<p>此页灵感来自旧网时代的 "now page" 传统。链接就不放了，免得你点出去回不来</p>`;
   return layoutMain({ title: '现在', active: '/now/', content });
 }
 
@@ -67,12 +67,60 @@ export function renderContact() {
   const content = `
 <h1>联系</h1>
 <p>邮件（最慢，大约 6 个月，不夸张）：</p>
-<pre>rx4098 [at] mail.rx4098.example
+<pre>rx4098 [at] rx4098.dpdns.org
 PGP: 4098 6216 2014 1108  8A33 04C1 7CE3 8B01
 （指纹是我人生里几个重要数字拼的，猜对没奖）</pre>
 <p>更快的方式：<a href="/guestbook/">留言板</a>，我看到就会回。</p>
 <p>不接广告，不换友链（除非认识），不参加"站长互推计划"。复古Web风的博主除外——复古Web风的博主看到这句话请立刻联系我</p>`;
   return layoutMain({ title: '联系', active: '/contact/', content });
+}
+
+/**
+ * 声明页（站外层）：ARG 虚构声明 / MIT 开源许可 / GitHub 仓库。
+ * 这一页明确跳出叙事——写给现实中的访客与开发者。
+ */
+export function renderLicense() {
+  const REPO = 'https://github.com/LinskYLess/WIG-RX4098_Website';
+  const content = `
+<h1>声明 · License</h1>
+<p class="meta">这一页不属于故事。写给现实里的你。</p>
+
+<div class="win">
+  <div class="win-title"><span>README — 这是什么</span></div>
+  <div class="win-body">
+    <p>本站是一个<strong>虚构的 ARG（Alternate Reality Game，替代现实游戏）作品</strong>：表面是一份"技术宅的旧个人主页"，底下是一条可以玩的隐藏叙事线（灯塔、旧游戏、等待与交接）。</p>
+    <p>站内出现的所有人物、公司、游戏、组织、事件、日志与邮件<strong>均为创作，不对应任何真实人物或真实事件</strong>；如与现实雷同，纯属巧合。叙事设定与完整答案仅存在于仓库的 <code>docs/</code> 目录，想自己解谜的玩家请绕行。</p>
+  </div>
+</div>
+
+<div class="win">
+  <div class="win-title"><span>LICENSE — 版权与开源</span></div>
+  <div class="win-body">
+    <p>本站全部源码——页面、文本、设计（CSS/SVG）、脚本与文档——以 <strong>MIT License</strong> 开源。</p>
+    <p>→ 许可全文：<a href="${REPO}/blob/master/LICENSE" rel="noopener">LICENSE</a>（仓库根目录同名文件）</p>
+    <p>你可以自由地使用、学习、修改、分发本项目，唯一的要求是保留原许可与版权声明。</p>
+  </div>
+</div>
+
+<div class="win">
+  <div class="win-title"><span>GITHUB — 源码仓库</span></div>
+  <div class="win-body">
+    <p>→ 仓库地址：<a href="${REPO}" rel="noopener">github.com/LinskYLess/WIG-RX4098_Website</a></p>
+    <p>发现 bug、死链或剧情漏洞，欢迎提 <a href="${REPO}/issues" rel="noopener">Issue</a>；想改点什么，PR 随时开着。Fork 后把它改成你自己的站是被鼓励的用法——换掉站名、答案和故事，灯就算交接过去了。</p>
+  </div>
+</div>
+
+<div class="win">
+  <div class="win-title"><span>NOTES — 其他</span></div>
+  <div class="win-body">
+    <p>· 本站无后端、无统计、无 Cookie：进度只存在你自己的浏览器 <code>localStorage</code> 里。</p>
+    <p>· 纯静态构建，零运行时依赖，部署方式见仓库 README（任意静态托管均可运行）。</p>
+    <p>· 站内叙事部分的"© RX4098"是角色署名；现实部分的版权与许可以本页为准。</p>
+  </div>
+</div>
+
+<p class="postscript">故事会结束，许可不会。—— 站长 & RX4098</p>`;
+  return layoutMain({ title: '声明 · License', active: '/license/', content });
 }
 
 export function renderLinks() {

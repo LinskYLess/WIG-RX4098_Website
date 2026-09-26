@@ -23,14 +23,14 @@ function panelHtml() {
       <p>主机：raspberry-pi-4b（阳台弱电箱）<br>点灯：2023-06-21 21:00 +08<br>心跳：每 6 小时 · 未曾中断<br>等待对象：<code>####</code>（见握手记录）</p>
       <p>交接窗口倒计时：</p>
       <p class="countdown" id="countdown">—</p>
-      <p class="tiny" id="countdown-note" style="color:#555">窗口关闭则灯塔转为静态纪念模式。不悲伤，两条路都写好了信。</p>
+      <p class="tiny" id="countdown-note" style="color:#444">窗口关闭则灯塔转为静态纪念模式。不悲伤，两条路都写好了信。</p>
     </div>
   </div>
 
   <div class="win">
     <div class="win-title"><span>QUEUE — 排队的草稿</span></div>
     <div class="win-body">
-      <p style="color:#555">每周四 04:00 自动生成。大部分不会发布。它们本来是写给一个人的。</p>
+      <p style="color:#444">每周四 04:00 自动生成。大部分不会发布。它们本来是写给一个人的。</p>
       ${DRAFTS.map((d) => `<p><b>${esc(d.date)}</b> · ${esc(d.title)}<br>${esc(d.body)}</p>`).join('<hr style="border:none;border-top:1px dotted #bbb">')}
     </div>
   </div>
@@ -38,7 +38,7 @@ function panelHtml() {
   <div class="win">
     <div class="win-title"><span>HONEYPOT — 信号记录</span></div>
     <div class="win-body">
-      <pre style="border:none;background:transparent;padding:0;font-size:12px">${esc(HONEYPOT_LINES)}</pre>
+      <pre style="border:none;background:transparent;padding:0">${esc(HONEYPOT_LINES)}</pre>
     </div>
   </div>
 
@@ -47,11 +47,11 @@ function panelHtml() {
     <div class="win-body letter-body" style="font-family:Georgia,'Songti SC',SimSun,serif">${mailBody}</div>
   </div>
 
-  <div class="win">
+  <div class="win win-span">
     <div class="win-title"><span>TERMINAL</span></div>
     <div class="win-body">
       <div id="terminal"></div>
-      <p class="tiny" style="color:#555">第一句试试 <code>help</code>。握手协议：<code>handshake</code>。</p>
+      <p class="tiny" style="color:#444">第一句试试 <code>help</code>。握手协议：<code>handshake</code>。</p>
     </div>
   </div>
 

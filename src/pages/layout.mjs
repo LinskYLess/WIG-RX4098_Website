@@ -97,6 +97,7 @@ const SIDEBAR = `
     <ul class="side-misc">
       <li><a href="/now/">现在</a></li>
       <li><a href="/contact/">联系</a></li>
+      <li><a href="/license/">声明</a></li>
       <li><a href="/404.html">404</a></li>
     </ul>
   </div>
@@ -121,6 +122,10 @@ export function layoutMain(opt) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title ? esc(title) + ' · ' : ''}RX4098 的小破站</title>
 <meta name="description" content="${esc(desc)}">
+<meta property="og:site_name" content="RX4098 的小破站">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${title ? esc(title) + ' · ' : ''}RX4098 的小破站">
+<meta property="og:description" content="${esc(desc)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="stylesheet" href="/assets/css/main.css">
@@ -148,6 +153,7 @@ ${bootData(bootExtra)}
 <footer class="site-footer">
   <p>© 2022–2026 RX4098 · 本站由一块树莓派和一根网线供养 · <a href="/guestbook/">留言板</a>还热着</p>
   <p class="tiny">由手工 HTML 与固执供养 · 不跟踪 · 不统计 · 心跳除外 <span aria-hidden="true">´・ω・\`</span></p>
+  <p class="tiny"><a href="/license/">声明 · MIT 开源</a> · <a href="https://github.com/LinskYLess/WIG-RX4098_Website" rel="noopener">GitHub 仓库</a></p>
   ${comment ? `\n${comment}` : ''}
 </footer>
 ${lockedPayload(lockedBlocks)}

@@ -131,7 +131,7 @@ const COMMANDS = {
     for (const line of text.trim().split('\n').slice(0, 60)) print(line, line.startsWith('#') ? 't-dim' : '');
   },
 
-  morse(args) {
+  morse(...args) {
     if (args[0] === '-play') {
       const text = args.slice(1).join(' ') || 'CQ';
       const m = textToMorse(text);
@@ -295,8 +295,10 @@ function buildWin() {
   win.innerHTML = `
     <div class="win-title"><span>beacon-terminal — raspberry-pi-4b</span><span class="win-btns"><i data-act="close">×</i></span></div>
     <div class="win-body">
-      <div class="terminal" tabindex="0"><div class="t-out"></div></div>
-      <div class="terminal-input"><span class="t-prompt">rx@beacon:~$</span><input type="text" autocomplete="off" spellcheck="false" aria-label="终端输入"></div>
+      <div class="term-shell">
+        <div class="terminal" tabindex="0"><div class="t-out"></div></div>
+        <div class="terminal-input"><span class="t-prompt">rx@beacon:~$</span><input type="text" autocomplete="off" spellcheck="false" aria-label="终端输入"></div>
+      </div>
     </div>`;
   outEl = win.querySelector('.t-out');
   inputEl = win.querySelector('input');
@@ -361,7 +363,7 @@ function exec(raw) {
   const fn = COMMANDS[cmd.toLowerCase()];
   if (!fn) { print(`beacon: ${cmd}: 没有这个命令。help 一下？`, 't-err'); return; }
   try {
-    const r = fn(args);
+    const r = fn(...args);
     if (r instanceof Promise) r.catch((/** @type {any} */ e) => print(`错误：${e.message}`, 't-err'));
   } catch (e) {
     print(`错误：${/** @type {any} */ (e).message}`, 't-err');
