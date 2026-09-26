@@ -30,7 +30,7 @@ export function renderOldIndex() {
   <h2>友情链接</h2>
   <p><a href="https://midnight-wave.example/" rel="nofollow">午夜电波</a> · <a href="https://slowlemon.example/" rel="nofollow">慢速柠檬</a> · 更多见新站</p>
 </div>
-<marquee style="color:#e80;font-size:12px">★ 欢迎光临 ★ 本站永久域名 rx4098.dpdns.org ★ 记得常来 ★</marquee>`;
+<div class="old-marquee"><span>★ 欢迎光临 ★ 本站永久域名 rx4098.dpdns.org ★ 记得常来 ★</span></div>`;
 
   return layoutOld({
     title: '首页',
@@ -51,12 +51,13 @@ export function renderOldRelight() {
 
 <h3>成员</h3>
 <table>
-  <tr><th>ID</th><th>编号</th><th>分工</th><th>状态</th></tr>
+  <caption>RE:LIGHT 成员分工与现状</caption>
+  <tr><th scope="col">ID</th><th scope="col">编号</th><th scope="col">分工</th><th scope="col">状态</th></tr>
   <tr><td><b>萤火</b></td><td>#4097</td><td>服务端 / 发起人</td><td><span style="color:#a55">离线 · 2020-10-03</span></td></tr>
   <tr><td><b>RX4098</b></td><td>#4098</td><td>抓包 / 客户端工具</td><td><span style="color:#080">在线（大概）</span></td></tr>
-  <tr><td>白砂</td><td>#51xx</td><td>素材</td><td style="color:#999">已移出任务组</td></tr>
-  <tr><td>Momo</td><td>#6xxx</td><td>前端</td><td style="color:#999">退隐</td></tr>
-  <tr><td>root919</td><td>#7xxx</td><td>工具脚本</td><td style="color:#999">退圈（据说搞币去了）</td></tr>
+  <tr><td>白砂</td><td>#51xx</td><td>素材</td><td style="color:#6b6b6b">已移出任务组</td></tr>
+  <tr><td>Momo</td><td>#6xxx</td><td>前端</td><td style="color:#6b6b6b">退隐</td></tr>
+  <tr><td>root919</td><td>#7xxx</td><td>工具脚本</td><td style="color:#6b6b6b">退圈（据说搞币去了）</td></tr>
 </table>
 
 <h3>里程碑</h3>

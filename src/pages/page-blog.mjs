@@ -12,7 +12,7 @@ export function renderList() {
 ${years.map((y) => `
 <h2>${y}</h2>
 ${posts.filter((p) => p.date.startsWith(y)).map((p) => `
-<article class="gb-entry">
+<article class="entry-card">
   <div class="gb-head">${p.date}${p.tags.map((t) => ` <span class="tag">${esc(t)}</span>`).join('')}</div>
   <a href="/blog/${p.slug}/"><b>${esc(p.title)}</b></a>
   <p>${esc(p.summary)}</p>

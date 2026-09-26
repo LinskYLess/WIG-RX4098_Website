@@ -5,7 +5,7 @@
 
 import { createServer } from 'node:http';
 import { createReadStream, existsSync, statSync } from 'node:fs';
-import { extname, join, normalize, resolve } from 'node:path';
+import { extname, isAbsolute, join, normalize, relative, resolve } from 'node:path';
 
 const dir = resolve(process.argv[2] ?? 'dist');
 const port = Number(process.argv[3] ?? process.env.PORT ?? 8080);
@@ -32,19 +32,31 @@ const TYPES = {
 };
 
 const server = createServer((req, res) => {
-  const url = decodeURIComponent((req.url ?? '/').split('?')[0]);
-  let path = normalize(join(dir, url));
-  if (!path.startsWith(dir)) { res.writeHead(403); res.end('forbidden'); return; }
-
-  if (existsSync(path) && statSync(path).isDirectory()) {
-    path = join(path, 'index.html');
+  let url;
+  try {
+    url = decodeURIComponent((req.url ?? '/').split('?')[0]);
+  } catch {
+    res.writeHead(400); res.end('bad request'); return;
   }
-  if (!existsSync(path)) path = join(dir, '404.html');
+  const path = normalize(join(dir, url));
+  const rel = relative(dir, path);
+  if (rel.startsWith('..') || isAbsolute(rel)) { res.writeHead(403); res.end('forbidden'); return; }
 
-  const type = TYPES[extname(path)] ?? 'application/octet-stream';
-  const stream = createReadStream(path);
+  let target = path;
+  let status = 200;
+  if (existsSync(target) && statSync(target).isDirectory()) {
+    target = join(target, 'index.html');
+  }
+  if (!existsSync(target)) {
+    target = join(dir, '404.html');
+    status = existsSync(target) ? 404 : 500;
+    if (status === 500) { res.writeHead(500); res.end('404.html missing — run npm run build'); return; }
+  }
+
+  const type = TYPES[extname(target)] ?? 'application/octet-stream';
+  const stream = createReadStream(target);
   stream.on('error', () => { res.writeHead(500); res.end('internal error'); });
-  res.writeHead(200, { 'content-type': type, 'cache-control': 'no-cache' });
+  res.writeHead(status, { 'content-type': type, 'cache-control': 'no-cache' });
   stream.pipe(res);
 });
 

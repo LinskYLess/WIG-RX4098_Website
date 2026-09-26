@@ -3,10 +3,10 @@
  * 命令与门判定共用 ui.attemptGate；答案不落产物。
  */
 
-import { get, addFound, stage, exportRescue, importRescue, reset } from './state.mjs';
+import { get, addFound, addHint, stage, exportRescue, importRescue, reset } from './state.mjs';
 import { attemptGate, toast } from './ui.mjs';
 import { playMorse } from './audio.mjs';
-import { textToMorse } from '../../arg/cipher.mjs';
+import { textToMorse, decodeMaybeB64 } from '../../arg/cipher.mjs';
 
 const BANNER = [
   'beacon-terminal v2.6  (c) RX4098',
@@ -14,7 +14,7 @@ const BANNER = [
   '输入 help 查看命令。输入 exit 关闭。',
 ];
 
-const decodeHint = (b) => { try { return decodeURIComponent(escape(atob(b))); } catch { return b; } };
+const decodeHint = decodeMaybeB64;
 
 const HINTS_B64 = {
   'g1': [
@@ -162,7 +162,7 @@ const COMMANDS = {
     if (!list) { print(`没有 ${gate} 这个门`, 't-err'); return; }
     const s = get();
     const level = Math.min(list.length, (s.hintsSeen[gate] ?? 0) + 1);
-    import('./state.mjs').then((m) => { for (let i = (s.hintsSeen[gate] ?? 0); i < level; i++) m.addHint(gate); });
+    for (let i = (s.hintsSeen[gate] ?? 0); i < level; i++) addHint(gate);
     print(`提示 ${level}/3：${list[level - 1]}`, 't-amber');
   },
 
@@ -300,10 +300,10 @@ function buildWin() {
         <div class="terminal-input"><span class="t-prompt">rx@beacon:~$</span><input type="text" autocomplete="off" spellcheck="false" aria-label="终端输入"></div>
       </div>
     </div>`;
-  outEl = win.querySelector('.t-out');
-  inputEl = win.querySelector('input');
+  outEl = /** @type {HTMLElement} */ (win.querySelector('.t-out'));
+  inputEl = /** @type {HTMLInputElement} */ (win.querySelector('input'));
   BANNER.forEach((l) => print(l, 't-dim'));
-  win.querySelector('[data-act="close"]').addEventListener('click', () => {
+  /** @type {HTMLElement} */ (win.querySelector('[data-act="close"]')).addEventListener('click', () => {
     if (win.parentElement?.classList.contains('term-overlay')) closeTerm();
   });
   inputEl.addEventListener('keydown', (e) => {
@@ -345,7 +345,7 @@ function bindFAB() {
     fab.setAttribute('aria-label', '打开灯塔终端');
     document.body.appendChild(fab);
   }
-  document.getElementById('term-fab').addEventListener('click', () => {
+  /** @type {HTMLElement} */ (document.getElementById('term-fab')).addEventListener('click', () => {
     const overlay = document.querySelector('.term-overlay');
     if (overlay?.classList.contains('open')) closeTerm();
     else openTerm();

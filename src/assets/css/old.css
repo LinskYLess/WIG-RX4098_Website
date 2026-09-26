@@ -10,11 +10,14 @@ body.old-body {
 }
 body.old-body::before, body.old-body::after { display: none; }
 
+.skip { position: absolute; left: -9999px; top: 0; background: #fff; color: #06c; padding: 4px 10px; z-index: 10000; border: 2px outset #ccc; font-size: 13px; }
+.skip:focus { left: 8px; top: 8px; }
+
 .old-wrap { max-width: 820px; margin: 0 auto; padding: 18px 12px 40px; }
 
 .old-header { text-align: center; background: #fff; border: 1px solid #c9c4b8; padding: 18px 10px; box-shadow: 3px 3px 0 #dcd8cf; }
 .old-header h1 { color: #1c47d0; font-size: 24px; margin: 0; font-family: "Comic Sans MS", "Microsoft YaHei", cursive; text-shadow: 2px 2px 0 #ffd27a; }
-.old-sub { color: #888; font-size: 13px; margin: 6px 0 10px; }
+.old-sub { color: #767676; font-size: 13px; margin: 6px 0 10px; }
 .old-nav { font-size: 14px; }
 .old-nav a { color: #06c; text-decoration: none; margin: 0 4px; }
 .old-nav a:hover { color: #f60; text-decoration: underline; }
@@ -25,10 +28,20 @@ body.old-body::before, body.old-body::after { display: none; }
 .old-card p, .old-card li { font-size: 14.5px; color: #444; }
 .old-card a { color: #06c; }
 
-.old-footer { text-align: center; color: #999; font-size: 12px; margin-top: 20px; }
+.old-footer { text-align: center; color: #6b6b6b; font-size: 12px; margin-top: 20px; }
 .old-footer img { vertical-align: middle; margin: 0 3px; }
 
 .old-hr { border: none; border-top: 1px dashed #bbb; margin: 12px 0; }
+
+/* 跑马灯（<marquee> 已废弃，CSS 复刻；reduced-motion 下静止显示） */
+.old-marquee { overflow: hidden; white-space: nowrap; color: #e80; font-size: 12px; margin: 14px 0; }
+.old-marquee span { display: inline-block; padding-left: 100%; animation: old-scroll 18s linear infinite; }
+@keyframes old-scroll { to { transform: translateX(-100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .old-marquee span { animation: none; padding-left: 0; }
+}
+
+.old-wiki caption { caption-side: top; text-align: left; font-size: 12.5px; color: #6b6b6b; padding-bottom: 4px; }
 
 /* v1 时代的门 */
 .old-gate { background: #fffbe6; border: 1px solid #e8d48a; padding: 12px 14px; margin: 12px 0; font-size: 14px; }
@@ -46,6 +59,7 @@ body.old-body::before, body.old-body::after { display: none; }
 .old-wiki th, .old-wiki td { border: 1px solid #ccc; padding: 5px 9px; }
 
 .old-gate .gate-hint button, .gate-hint button { background: none; border: none; color: #06c; cursor: pointer; font-size: 13px; text-decoration: underline; padding: 0; }
+.gate-error { color: #c0392b; font-size: 13px; margin-top: 8px; min-height: 1em; }
 
 /* 门组件（旧皮肤语境） */
 .old-body .gate { background: #fffbe6; border: 1px solid #e8d48a; padding: 12px 14px; margin: 12px 0; }
@@ -55,5 +69,5 @@ body.old-body::before, body.old-body::after { display: none; }
 .old-body .gate .btn:active { border-style: inset; }
 .old-body .block-slot { display: none; margin-top: 10px; }
 .old-body .block-slot.open { display: block; }
-.old-body .gate-hint-text { color: #777; font-size: 12.5px; }
+.old-body .gate-hint-text { color: #6b6b6b; font-size: 12.5px; }
 .old-body .term-overlay, #term-fab { display: none !important; }

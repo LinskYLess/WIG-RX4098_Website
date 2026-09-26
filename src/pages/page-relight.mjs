@@ -33,9 +33,9 @@ export function renderRelight() {
     content,
     sidebar: '',
     lockedBlocks: [
-      { id: 'letter-firefly', keyId: 'r3', html: `<h2 style="margin-top:0">${esc(LETTERS.fromFirefly.title)}</h2><pre style="border:none;background:transparent;padding:0">${LETTERS.fromFirefly.body.replace(/<\/?pre[^>]*>/g, '').trim()}</pre>` },
-      { id: 'letter-rx', keyId: 'r3', html: `<h2 style="margin-top:0">${esc(LETTERS.fromRx.title)}</h2>${LETTERS.fromRx.body}` },
-      { id: 'letter-handover', keyId: 'r3', html: `<h2 style="margin-top:0">${esc(LETTERS.handover.title)}</h2>${LETTERS.handover.body}` },
+      { id: 'letter-firefly', keyId: 'r3', html: `<h2>${esc(LETTERS.fromFirefly.title)}</h2><pre class="letter-pre">${LETTERS.fromFirefly.body.replace(/<\/?pre[^>]*>/g, '').trim()}</pre>` },
+      { id: 'letter-rx', keyId: 'r3', html: `<h2>${esc(LETTERS.fromRx.title)}</h2>${LETTERS.fromRx.body}` },
+      { id: 'letter-handover', keyId: 'r3', html: `<h2>${esc(LETTERS.handover.title)}</h2>${LETTERS.handover.body}` },
       // G5 双金丝雀：敲击路径解 sslss；文本"在"解 alt
       { id: 'g5-mark', keyId: 'g5', marker: true },
       { id: 'g5-mark-alt', keyId: 'g5', keyAlt: true, marker: true },
@@ -51,7 +51,7 @@ export function renderRelightEnd() {
 
   const endHtml = `
 <div class="center-page">
-  <div class="big" style="color:var(--amber)">●●—●●</div>
+  <div class="big t-amber">●●—●●</div>
   <h1>故事完</h1>
   <p class="postscript">—— 但灯还亮着 ——</p>
 </div>
@@ -70,7 +70,7 @@ export function renderRelightEnd() {
 <ul>
   <li>你接下的是仪式，不是责任。这个站的浪漫全靠你自己。</li>
   <li>进度存在你的浏览器里，随时可以走（终端 <code>reset</code>）。灯不会怪你。</li>
-  <li>恢复码：<button class="btn primary" id="rescue-btn">导出</button><br><textarea id="rescue-out" rows="3" style="margin-top:8px;width:min(480px,100%)" readonly placeholder="点导出后，这里会出现一串可以带走的进度"></textarea></li>
+  <li>恢复码：<button class="btn primary" id="rescue-btn">导出</button><br><textarea id="rescue-out" class="rescue-out" rows="3" readonly placeholder="点导出后，这里会出现一串可以带走的进度"></textarea></li>
   <li>彩蛋：试试老式的 ↑↑↓↓←→←→BA。以及终端里没有列出来的命令。</li>
 </ul>
 

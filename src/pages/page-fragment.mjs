@@ -12,7 +12,7 @@ export function render() {
 ${FRAGMENTS.map((f) => `
 <section class="panel">
   <h3>${esc(f.title)}</h3>
-  <p class="side-date" style="color:var(--ink-faint);font:11px var(--mono)">来源：${esc(f.source)}</p>
+  <p class="side-date">来源：${esc(f.source)}</p>
   <div class="block-slot" data-block="${f.id}"></div>
   <noscript><p>（需要浏览器交互才能显影。）</p></noscript>
 </section>`).join('\n')}

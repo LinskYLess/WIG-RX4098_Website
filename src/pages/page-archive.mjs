@@ -43,16 +43,16 @@ ${entries}
   <div class="gb-text">${esc(FIREFLY_ENTRY.text)}</div>
 </div>
 <hr>
-<form id="gb-form" class="win" style="max-width:560px">
+<form id="gb-form" class="win">
   <div class="win-title"><span>签写留言（存本机）</span></div>
   <div class="win-body">
-    <p><input type="text" name="name" placeholder="怎么称呼你" style="width:100%"></p>
-    <p><textarea name="text" rows="3" placeholder="说点什么……（支持灯语）" style="width:100%"></textarea></p>
+    <p><input type="text" name="name" placeholder="怎么称呼你"></p>
+    <p><textarea name="text" rows="3" placeholder="说点什么……（支持灯语）"></textarea></p>
     <button class="btn primary" type="submit">提交</button>
-    <span class="tiny" style="color:#444"> （无后端，留言只保存在你的浏览器里。这也是一种隐私）</span>
+    <span class="tiny"> （无后端，留言只保存在你的浏览器里。这也是一种隐私）</span>
   </div>
 </form>
-<div id="gb-list" style="margin-top:20px"></div>`;
+<div id="gb-list"></div>`;
   return layoutMain({ title: '留言板', active: '/guestbook/', content });
 }
 
@@ -61,8 +61,8 @@ export function renderSearch() {
 <h1>站内搜索</h1>
 <p class="meta">纯客户端检索，无隐私顾虑。顺便：试试搜 "心跳"。</p>
 <div id="search-app" class="search-app">
-  <form><input type="search" placeholder="搜索全站……" aria-label="搜索" autofocus> <button class="btn primary" type="submit">搜</button></form>
-  <div class="search-out" style="margin-top:18px"></div>
+  <form><input type="search" placeholder="搜索全站……" aria-label="搜索"> <button class="btn primary" type="submit">搜</button></form>
+  <div class="search-out"></div>
 </div>`;
   return layoutMain({ title: '搜索', active: '/search/', content });
 }

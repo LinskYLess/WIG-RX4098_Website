@@ -7,6 +7,8 @@ export const ITEMS = [
   {
     id: 'moon-island',
     file: 'moon-island.svg',
+    // png 字段不参与页面渲染——对应 gen-assets.mjs 生成的 /gallery/moon-island.png
+    // （带 tEXt 隐藏坐标，ARG 可直访资产）。别当死代码删。
     png: 'moon-island.png',
     title: '灯塔岛看月亮',
     date: '2019-06-21',

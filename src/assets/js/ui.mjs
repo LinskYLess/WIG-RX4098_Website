@@ -8,21 +8,27 @@
  * 已通过的答案存入 localStorage（玩家自己的输入），刷新后重放注入。
  */
 
-import { xorDecrypt, b64DecodeText } from '../../arg/cipher.mjs';
+import { xorDecrypt, b64DecodeText, decodeMaybeB64 } from '../../arg/cipher.mjs';
 import { normalizeAnswer } from '../../arg/normalize.mjs';
-import { get, setGate } from './state.mjs';
+import { get, setGate, reset } from './state.mjs';
 
 const MARKER = 'RX4098::OK';
 
 /** @param {string} title @param {string} body @param {number} [ms] */
 export function toast(title, body, ms = 5200) {
   let root = document.getElementById('toast-root');
-  if (!root) { root = document.createElement('div'); root.id = 'toast-root'; document.body.appendChild(root); }
+  if (!root) {
+    root = document.createElement('div');
+    root.id = 'toast-root';
+    root.setAttribute('role', 'status'); // 门解锁/握手完成这类反馈，读屏用户也要能听到
+    root.setAttribute('aria-live', 'polite');
+    document.body.appendChild(root);
+  }
   const el = document.createElement('div');
   el.className = 'toast';
   el.innerHTML = '<div class="toast-title"></div><div class="toast-body"></div>';
-  el.querySelector('.toast-title').textContent = title;
-  el.querySelector('.toast-body').textContent = body;
+  /** @type {HTMLElement} */ (el.querySelector('.toast-title')).textContent = title;
+  /** @type {HTMLElement} */ (el.querySelector('.toast-body')).textContent = body;
   root.appendChild(el);
   setTimeout(() => el.remove(), ms);
 }
@@ -105,11 +111,6 @@ export function replayGates() {
 
 /* ---------------- 提示系统（3 档，渐进显示；内容服务端以 base64 内嵌） ---------------- */
 
-/** @param {string} s */
-function decodeMaybeB64(s) {
-  try { return decodeURIComponent(escape(atob(s))); } catch { return s; }
-}
-
 function bindHints() {
   /** @type {NodeListOf<HTMLElement>} */
   const gates = document.querySelectorAll('.gate[data-gate]');
@@ -181,8 +182,25 @@ export function decryptEncFile(b64Content, answer) {
   return /[\u4e00-\u9fff]/.test(text) && !text.includes('\uFFFD') ? text : null;
 }
 
+/** 关于页隐藏链接：与终端 reset 命令同级的清档入口，双重确认。 */
+function bindResetLink() {
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const links = document.querySelectorAll('a[data-reset]');
+  links.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!confirm('这会清空全部进度（门、碎片、守灯人状态）。确定？')) return;
+      if (!confirm('最后确认：真的回到 2022 年的凌晨？')) return;
+      reset();
+      toast('已清空', '灯回到 2022 年的凌晨。');
+      setTimeout(() => { location.href = '/'; }, 900);
+    });
+  });
+}
+
 export function initUi() {
   replayGates();
   bindGates();
   bindHints();
+  bindResetLink();
 }

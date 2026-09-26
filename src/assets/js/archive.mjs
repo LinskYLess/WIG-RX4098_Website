@@ -2,7 +2,7 @@
  * archive.mjs — /archive/ 仿真文件浏览器：目录树 + 查看器 + .enc 口令解密。
  */
 
-import { get } from './state.mjs';
+import { get, setGate } from './state.mjs';
 import { decryptEncFile, toast } from './ui.mjs';
 
 /** @type {{path:string, mtime:string, note?:string}[]} */
@@ -41,11 +41,19 @@ function renderTree(sel) {
 async function openFile(path) {
   const view = document.querySelector('#arch-view');
   const meta = document.querySelector('#arch-meta');
-  if (!view) return;
+  if (!view || !meta) return;
   const info = byPath().get(path);
   meta.textContent = `${path} · ${info?.mtime ?? ''}${info?.note ? ' · ' + info.note : ''}`;
-  const r = await fetch(`/archive/files/${path}`);
-  const text = await r.text();
+  let text;
+  try {
+    const r = await fetch(`/archive/files/${path}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    text = await r.text();
+  } catch (err) {
+    const why = err instanceof Error ? err.message : String(err);
+    view.innerHTML = `<pre>读不出来（${why}）。文件可能已经不在了——或者它不想被读到。</pre>`;
+    return;
+  }
 
   if (path.endsWith('.enc')) {
     const saved = get().answers?.g2;
@@ -61,7 +69,7 @@ async function openFile(path) {
       </div>`;
     view.innerHTML = encWrap;
     const show = (content, ok) => {
-      const box = view.querySelector('.enc-result');
+      const box = /** @type {HTMLElement} */ (view.querySelector('.enc-result'));
       box.innerHTML = `<pre>${content.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</pre>`;
       if (ok) toast('🔓 档案解开', path);
     };
@@ -69,17 +77,17 @@ async function openFile(path) {
       const plain = decryptEncFile(text, saved);
       if (plain) { show(plain, true); return; }
     }
-    const form = view.querySelector('.enc-form');
+    const form = /** @type {HTMLFormElement | null} */ (view.querySelector('.enc-form'));
     if (!form) return;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const val = form.querySelector('input').value;
+      const val = /** @type {HTMLInputElement} */ (form.querySelector('input')).value;
       const plain = decryptEncFile(text, val);
-      const err = view.querySelector('.gate-error');
+      const err = /** @type {HTMLElement} */ (view.querySelector('.gate-error'));
       if (plain) {
         show(plain, true);
         err.textContent = '';
-        import('./state.mjs').then((m) => m.setGate('g2', val.replace(/[^0-9]/g, '')));
+        setGate('g2', val.replace(/[^0-9]/g, ''));
       } else {
         err.textContent = '解不开。密钥不对。';
       }
@@ -93,5 +101,5 @@ async function openFile(path) {
 export function initArchive() {
   if (!document.getElementById('arch-tree')) return;
   renderTree('#arch-tree');
-  document.querySelector('#arch-view').innerHTML = '<p class="t-dim" style="color:var(--ink-faint)">← 从左侧选一个文件。README.txt 是个好起点。</p>';
+  /** @type {HTMLElement} */ (document.querySelector('#arch-view')).innerHTML = '<p class="t-dim">← 从左侧选一个文件。README.txt 是个好起点。</p>';
 }

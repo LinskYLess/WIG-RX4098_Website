@@ -3,6 +3,8 @@
  * 结构：{ gates, keeper, found, guestbook, visits, hintsSeen }
  */
 
+import { b64EncodeText, b64DecodeText } from '../../arg/cipher.mjs';
+
 const KEY = 'rx4098:v1';
 
 const DEFAULT = {
@@ -16,6 +18,18 @@ const DEFAULT = {
 };
 
 let cache = null;
+
+/** 合并存档：顶层覆盖 + 嵌套对象（gates/answers/hintsSeen）做一层合并，
+ *  未来给嵌套结构加字段时，旧存档不会因为整体替换而缺 key。 */
+function mergeSave(base, patch) {
+  const out = { ...structuredClone(base), ...patch };
+  for (const key of ['gates', 'answers', 'hintsSeen']) {
+    if (out[key] && typeof out[key] === 'object' && !Array.isArray(out[key])) {
+      out[key] = { ...(base[key] ?? {}), ...out[key] };
+    }
+  }
+  return out;
+}
 
 /**
  * @typedef {Object} SaveState
@@ -33,7 +47,7 @@ export function get() {
   if (cache) return cache;
   try {
     const raw = localStorage.getItem(KEY);
-    cache = raw ? { ...structuredClone(DEFAULT), ...JSON.parse(raw) } : structuredClone(DEFAULT);
+    cache = raw ? mergeSave(DEFAULT, JSON.parse(raw)) : structuredClone(DEFAULT);
   } catch {
     cache = structuredClone(DEFAULT);
   }
@@ -105,13 +119,14 @@ export function addGuestbookEntry(entry) {
 
 /** 导出恢复码（进度 base64）。 */
 export function exportRescue() {
-  return btoa(unescape(encodeURIComponent(JSON.stringify(get()))));
+  return b64EncodeText(JSON.stringify(get()));
 }
 
-/** 导入恢复码。 */
+/** 导入恢复码（结构校验 + 嵌套合并；坏码抛错由调用方提示）。 */
 export function importRescue(code) {
-  const obj = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
-  cache = { ...structuredClone(DEFAULT), ...obj };
+  const obj = JSON.parse(b64DecodeText(code.trim()));
+  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) throw new Error('恢复码结构不对');
+  cache = mergeSave(DEFAULT, obj);
   save();
   emit('rx:restore', {});
   return true;

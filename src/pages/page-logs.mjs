@@ -3,9 +3,9 @@
 import { layoutMain, esc } from './layout.mjs';
 import { genBeaconLog, genServerLog } from '../content/logs.mjs';
 
-export function render() {
-  const beacon = genBeaconLog();
-  const server = genServerLog();
+export function render(now = Date.now()) {
+  const beacon = genBeaconLog(now);
+  const server = genServerLog(now);
   const content = `
 <h1>日志</h1>
 <p class="meta">树莓派同步过来的运行日志。看看就好，别当新闻读。</p>
@@ -25,7 +25,7 @@ export function render() {
   尾部那些 <code>sig=</code> 单字符是轮换的呼号片段——写信那天手滑删了注释，现在懒得补。懂的人自然懂。
 </div>
 
-<p class="tiny" style="color:var(--ink-faint)">这个站的<a href="/old/" data-found="old">前身</a>还挂在旧目录里，皮肤是 2022 年的，懒得迁移。</p>`;
+<p class="tiny">这个站的<a href="/old/" data-found="old">前身</a>还挂在旧目录里，皮肤是 2022 年的，懒得迁移。</p>`;
 
   return layoutMain({
     title: '日志',

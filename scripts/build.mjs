@@ -21,6 +21,8 @@ import { writeAssets } from './gen-assets.mjs';
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const DIST = join(ROOT, 'dist');
 const SITE_URL = 'https://rx4098.dpdns.org';
+// robots.txt Disallow 的目录：禁爬之外再加 noindex（"禁爬 ≠ 不索引"），与"不让爬"的叙事一致
+const NOINDEX_PREFIXES = ['logs/', 'system/', 'fragment/', 'relight/', 'old/relight/', 'tmp/', 'dump/'];
 
 /* ---------- 1. 清空与重建 dist ---------- */
 rmSync(DIST, { recursive: true, force: true });
@@ -28,17 +30,34 @@ mkdirSync(DIST, { recursive: true });
 
 /* ---------- 2. 渲染页面 ---------- */
 let pageCount = 0;
+const buildNow = Date.now(); // 全程共用一个时刻：页面内嵌日志与 logs/*.log 不会跨 6h 心跳边界各说各话
 for (const page of PAGES) {
-  let html = await page.render();
+  let html = await page.render(buildNow);
   if (typeof html !== 'string' || !html) {
     console.error(`[build] 页面渲染失败（返回空）：${page.out}`);
     process.exit(1);
   }
-  // SEO：canonical + og:url（404 页不参与索引，跳过）
-  if (page.out !== '404.html') {
-    const urlPath = page.out === 'index.html' ? '/' : `/${page.out.replace(/index\.html$/, '')}`;
-    const seoTags = `<link rel="canonical" href="${SITE_URL}${urlPath}">\n<meta property="og:url" content="${SITE_URL}${urlPath}">`;
-    html = html.replace('</head>', `${seoTags}\n</head>`);
+  // SEO：canonical/og/noindex 统一注入（站点绝对 URL 只存在于本文件，模板里不放）
+  const urlPath = page.out === 'index.html' ? '/' : `/${page.out.replace(/index\.html$/, '')}`;
+  const is404 = page.out === '404.html';
+  const noindex = is404 || NOINDEX_PREFIXES.some((p) => page.out.startsWith(p));
+  const seoTags = [];
+  if (noindex) {
+    seoTags.push('<meta name="robots" content="noindex">');
+  } else {
+    seoTags.push(`<link rel="canonical" href="${SITE_URL}${urlPath}">`);
+    seoTags.push(`<meta property="og:url" content="${SITE_URL}${urlPath}">`);
+  }
+  if (!is404) {
+    seoTags.push(`<meta property="og:image" content="${SITE_URL}/og-image.png">`);
+    seoTags.push('<meta name="twitter:card" content="summary_large_image">');
+  }
+  html = html.replace('</head>', `${seoTags.join('\n')}\n</head>`);
+  // 博文详情页：og:type 改为 article（模板硬编码了 website，这里替换）并补发布时间
+  const post = POSTS.find((p) => page.out === `blog/${p.slug}/index.html`);
+  if (post) {
+    html = html.replace('<meta property="og:type" content="website">', '<meta property="og:type" content="article">');
+    html = html.replace('</head>', `<meta property="article:published_time" content="${post.date}">\n</head>`);
   }
   const out = join(DIST, page.out);
   mkdirSync(dirname(out), { recursive: true });
@@ -83,11 +102,50 @@ Sitemap: ${SITE_URL}/sitemap.xml
 `);
 
 const publicUrls = ['', 'about/', 'blog/', 'games/', 'gear/', 'gallery/', 'archive/', 'links/', 'guestbook/', 'contact/', 'now/', 'search/', 'backup/', 'license/'];
-const today = new Date().toISOString().slice(0, 10);
+// 博文用真实发布日期做 lastmod；其余页面没有可信的"最后修改"概念，省略（全部刷成构建日反而是坏信号）
+const urlEntries = [
+  ...publicUrls.map((u) => ({ loc: u, lastmod: '' })),
+  ...POSTS.slice().sort((a, b) => b.date.localeCompare(a.date)).map((p) => ({ loc: `blog/${p.slug}/`, lastmod: p.date })),
+];
 writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${publicUrls.map((u) => `  <url><loc>${SITE_URL}/${u}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+${urlEntries.map((u) => `  <url><loc>${SITE_URL}/${u.loc}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}</url>`).join('\n')}
 </urlset>
+`);
+
+/* ---------- 4.5 RSS ---------- */
+const escXml = (s) =>
+  String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const feedItems = POSTS.slice()
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .map((p) => `  <item>
+    <title>${escXml(p.title)}</title>
+    <link>${SITE_URL}/blog/${p.slug}/</link>
+    <guid isPermaLink="true">${SITE_URL}/blog/${p.slug}/</guid>
+    <pubDate>${new Date(`${p.date}T00:00:00+08:00`).toUTCString()}</pubDate>
+    <description>${escXml(p.summary)}</description>
+  </item>`)
+  .join('\n');
+writeFileSync(join(DIST, 'feed.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>RX4098 的小破站</title>
+  <link>${SITE_URL}/</link>
+  <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
+  <description>装机、游戏、老软件、归档，以及一点没关的灯。</description>
+  <language>zh-CN</language>
+  <generator>node scripts/build.mjs（手写的，站长拒绝用现成的）</generator>
+${feedItems}
+</channel>
+</rss>
+`);
+
+/* ---------- 4.6 Cloudflare Pages 响应头 ---------- */
+writeFileSync(join(DIST, '_headers'), `/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
 `);
 
 writeFileSync(join(DIST, 'manifest.webmanifest'), JSON.stringify({
@@ -97,7 +155,10 @@ writeFileSync(join(DIST, 'manifest.webmanifest'), JSON.stringify({
   display: 'standalone',
   background_color: '#0b0f14',
   theme_color: '#0b0f14',
-  icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }],
+  icons: [
+    { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
+    { src: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+  ],
 }, null, 2));
 
 mkdirSync(join(DIST, '.well-known'), { recursive: true });
@@ -124,8 +185,8 @@ for (const f of FILES) {
 
 /* ---------- 6. 日志 ---------- */
 mkdirSync(join(DIST, 'logs'), { recursive: true });
-writeFileSync(join(DIST, 'logs', 'beacon.log'), genBeaconLog());
-writeFileSync(join(DIST, 'logs', 'server.log'), genServerLog());
+writeFileSync(join(DIST, 'logs', 'beacon.log'), genBeaconLog(buildNow));
+writeFileSync(join(DIST, 'logs', 'server.log'), genServerLog(buildNow));
 
 /* ---------- 6.5 杂项目录：/tmp/ /dump/ /backup/ 的实体文件 ---------- */
 mkdirSync(join(DIST, 'tmp'), { recursive: true });

@@ -3,10 +3,9 @@
  * 载荷脚本（加密）由 layout 在 </body> 前统一输出；此处只渲染结构与槽位。
  */
 
+import { esc } from './layout.mjs';
 import { b64EncodeText } from '../arg/cipher.mjs';
 import { GATES, GATE_REWARDS } from '../arg/puzzles.mjs';
-
-export const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 /**
  * 门组件：表单 + 提示按钮 + 内容槽。
@@ -26,7 +25,7 @@ export function gateBlock(gateId, { slotId, html = '' } = {}) {
   <form class="gate-form" data-gate="${gateId}" data-kind="${g.kind}" data-reward="${esc(GATE_REWARDS[gateId] ?? '……')}">
     <input type="text" placeholder="${esc(g.placeholder)}" aria-label="${esc(g.title)}">
     <button class="btn primary" type="submit">提交</button>
-    <button class="btn gate-hint-btn" type="button" style="display:none">要提示吗？</button>
+    <button class="btn gate-hint-btn" type="button">要提示吗？</button>
   </form>
   <div class="gate-error" role="alert"></div>
   <p class="gate-hint"><span class="gate-hint-text"></span></p>

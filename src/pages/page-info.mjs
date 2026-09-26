@@ -6,12 +6,13 @@ import { WEBRING, FRIEND_LINKS, BOOKMARKS, TOOLS } from '../content/links.mjs';
 export function renderAbout() {
   const content = `
 <h1>关于我</h1>
-<table>
-  <tr><th style="width:90px">ID</th><td>RX4098（本名任霄。R 是姓的首字母，X 是名的；4098 是一个游戏角色编号，见 <a href="/games/">游戏页</a>）</td></tr>
-  <tr><th>坐标</th><td>江苏苏州（工作）· 中部 J 市（老家）</td></tr>
-  <tr><th>职业</th><td>运维工程师（物流 SaaS）。写巡检脚本、看告警、背值班表</td></tr>
-  <tr><th>教育</th><td>江东理工学院 计算机科学与技术 2020–2024</td></tr>
-  <tr><th>机龄</th><td>16 年（2010 年家里的 XP 台式机算起）</td></tr>
+<table class="about-table">
+  <caption class="sr-only">站长档案</caption>
+  <tr><th scope="row">ID</th><td>RX4098（本名任霄。R 是姓的首字母，X 是名的；4098 是一个游戏角色编号，见 <a href="/games/">游戏页</a>）</td></tr>
+  <tr><th scope="row">坐标</th><td>江苏苏州（工作）· 中部 J 市（老家）</td></tr>
+  <tr><th scope="row">职业</th><td>运维工程师（物流 SaaS）。写巡检脚本、看告警、背值班表</td></tr>
+  <tr><th scope="row">教育</th><td>江东理工学院 计算机科学与技术 2020–2024</td></tr>
+  <tr><th scope="row">机龄</th><td>16 年（2010 年家里的 XP 台式机算起）</td></tr>
 </table>
 
 <h2>会点什么</h2>
@@ -43,7 +44,7 @@ export function renderAbout() {
 <p>纯静态，手写 HTML/CSS/JS，无跟踪无统计。托管在 VPS，源备份在树莓派和一块 4T 移动硬盘。有些目录 robots.txt 里写着不让爬——不是针对搜索引擎，是针对所有好奇的东西</p>
 <p>想说话去<a href="/guestbook/">留言板</a>，那里回得快一些</p>
 <hr>
-<p class="tiny" style="color:var(--ink-faint)">隐藏操作：<a href="#" id="reset-link" data-reset>重置本站进度</a>（危险操作，需双重确认）</p>`;
+<p class="tiny">隐藏操作：<a href="#" id="reset-link" data-reset>重置本站进度</a>（危险操作，需双重确认）</p>`;
 
   return layoutMain({ title: '关于', active: '/about/', content });
 }
@@ -148,7 +149,7 @@ export function renderLinks() {
 <table>
   ${TOOLS.map((l) => `<tr><td><a href="${l.url}" rel="nofollow">${esc(l.name)}</a></td><td>${esc(l.note)}</td></tr>`).join('')}
 </table>
-<p class="tiny" style="color:var(--ink-faint)">死链是旧互联网的地貌。我不删它们。</p>`;
+<p class="tiny">死链是旧互联网的地貌。我不删它们。</p>`;
   return layoutMain({ title: '友链', active: '/links/', content });
 }
 

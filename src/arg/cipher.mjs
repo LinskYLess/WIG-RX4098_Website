@@ -62,6 +62,21 @@ export function b64DecodeText(b64) {
   return dec.decode(b64ToBytes(b64));
 }
 
+const B64_RE = /^[A-Za-z0-9+/]+={0,2}$/;
+
+/** 宽松 base64 文本解码：不是合法 base64 或解出乱码时原样返回。
+ *  站内提示串（hint/彩蛋键）统一从这里走，Node/浏览器行为一致。 */
+export function decodeMaybeB64(s) {
+  const t = String(s).trim();
+  if (!t || t.length % 4 !== 0 || !B64_RE.test(t)) return s;
+  try {
+    const out = dec.decode(b64ToBytes(t));
+    return out.includes('\uFFFD') || /[\u0000-\u0008\u000e-\u001f]/.test(out) ? s : out;
+  } catch {
+    return s;
+  }
+}
+
 /* ---------- 摩斯电码 ---------- */
 
 export const MORSE_TABLE = {
@@ -110,10 +125,11 @@ export function morseToText(morse) {
 /* ---------- PCM/WAV：灯语音频（Node 写文件 / 浏览器播放共用时序） ---------- */
 
 /**
- * 把摩斯串合成为 PCM 时序事件。
+ * 把摩斯串合成为 PCM 时序事件。（unit 默认 0.14s —— 与 audio.mjs 的播放时序同源，
+ * 两处曾经漂移过默认值，现在只允许这一份实现。）
  * @returns {{events: Array<{t:number, d:number}>, duration:number}} t=开始秒 d=时长秒
  */
-export function morseTimeline(morse, unit = 0.12) {
+export function morseTimeline(morse, unit = 0.14) {
   const events = [];
   let t = 0;
   for (const ch of morse) {
@@ -126,7 +142,7 @@ export function morseTimeline(morse, unit = 0.12) {
 }
 
 /** 合成 44.1kHz 16bit 单声道 PCM（正弦 + 轻微包络，模拟"灯"的哔声）。 */
-export function morseToPcm(morse, { unit = 0.12, freq = 620, rate = 44100 } = {}) {
+export function morseToPcm(morse, { unit = 0.14, freq = 620, rate = 44100 } = {}) {
   const { events, duration } = morseTimeline(morse, unit);
   const n = Math.ceil((duration + 0.3) * rate);
   const pcm = new Int16Array(n);

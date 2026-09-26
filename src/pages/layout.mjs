@@ -50,7 +50,20 @@ function bootData(extra = {}) {
   return `<script>window.__RX__=${JSON.stringify(payload)};</script>`;
 }
 
-function lampSvg(cls = '') {
+/** 灯塔灯室 SVG。variant='nav' 头部小灯（beam/bulb 复用 .lamp-bulb 动画）；
+ *  variant='hero' 首页大灯（带灯罩立柱与 .hero-bulb/.hero-halo 呼吸动画）。
+ *  两个变体渐变 id 不同（lg/hg），同页出现也不会互相污染。 */
+export function lampSvg({ cls = '', variant = 'nav' } = {}) {
+  if (variant === 'hero') {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true">
+<defs><radialGradient id="hg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd27a"/><stop offset="60%" stop-color="#f2a33c"/><stop offset="100%" stop-color="#7a4a12"/></radialGradient></defs>
+<rect x="10.5" y="12" width="3" height="9" fill="#8b95a3"/>
+<rect x="7" y="21" width="10" height="1.6" fill="#5b6068"/>
+<rect x="8.5" y="6" width="7" height="3.5" fill="#26303b"/>
+<circle class="hero-bulb" cx="12" cy="7.75" r="2.6" fill="url(#hg)"/>
+<circle class="hero-halo" cx="12" cy="7.75" r="3" fill="none" stroke="#f2a33c"/>
+</svg>`;
+  }
   return `<svg class="lamp ${cls}" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
 <defs><radialGradient id="lg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd27a"/><stop offset="60%" stop-color="#f2a33c"/><stop offset="100%" stop-color="#7a4a12"/></radialGradient></defs>
 <circle class="lamp-bulb" cx="12" cy="10" r="6" fill="url(#lg)"/>
@@ -122,11 +135,15 @@ export function layoutMain(opt) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title ? esc(title) + ' · ' : ''}RX4098 的小破站</title>
 <meta name="description" content="${esc(desc)}">
+<meta name="theme-color" content="#0b0f14">
 <meta property="og:site_name" content="RX4098 的小破站">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${title ? esc(title) + ' · ' : ''}RX4098 的小破站">
 <meta property="og:description" content="${esc(desc)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="RX4098 的小破站" href="/feed.xml">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="stylesheet" href="/assets/css/main.css">
 ${bootData(bootExtra)}
@@ -170,22 +187,29 @@ export function layoutOld(opt) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)} · RX4098 の小站 v1</title>
+<meta name="description" content="RX4098 の小站 v1 —— 2022 年的旧站快照。白底卡片、访客计数器、建设中动图，当年的审美都在。">
+<meta property="og:site_name" content="RX4098 の小站 v1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${esc(title)} · RX4098 の小站 v1">
+<meta property="og:description" content="2022 年的旧站快照。白底卡片、访客计数器、建设中动图，当年的审美都在。">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 <link rel="stylesheet" href="/assets/css/old.css">
 <script>window.__RX_OLD__=true;</script>
 <script type="module" src="/assets/js/boot.mjs"></script>
 </head>
 <body class="old-body" data-arg-stage="0">
+<a class="skip" href="#main">跳到内容</a>
 <div class="old-wrap">
   <div class="old-header">
     <h1>☆ RX4098 の小站 ☆</h1>
     <p class="old-sub">- 建设中 ING 欢迎光临 -</p>
-    <div class="old-nav">
+    <nav class="old-nav" aria-label="旧站导航">
       <a href="/old/">首页</a> | <a href="/old/#about">关于</a> | <a href="/old/#log">日志</a> | <a href="/old/relight/">项目</a> | <a href="/">【新站】</a>
-    </div>
+    </nav>
     <p class="old-count">您是第 002741 位访客</p>
   </div>
-  ${content}
+  <main id="main">${content}</main>
   <div class="old-footer">
     <p>© 2022 RX4098 · Best viewed in 1366x768 IE9+ / Chrome 98</p>
     <p><img src="/assets/img/badge-webring.svg" alt="webring" width="88" height="31" loading="lazy"> <img src="/assets/img/badge-html.svg" alt="html" width="88" height="31" loading="lazy"></p>

@@ -1,22 +1,11 @@
 /**
- * audio.mjs — WebAudio 摩斯/灯语播放（时序与构建期 WAV 生成同源）。
+ * audio.mjs — WebAudio 摩斯/灯语播放。
+ * 摩斯时序来自 arg/cipher.mjs 的 morseTimeline（与构建期 WAV 生成真正同源）。
  */
 
-const UNIT = 0.14;   // 摩斯基本单位（秒）
-const FREQ = 620;    // 摩斯音高
+import { morseTimeline } from '../../arg/cipher.mjs';
 
-/** 摩斯串 → 时序事件。 */
-export function timeline(morse, unit = UNIT) {
-  const events = [];
-  let t = 0;
-  for (const ch of morse) {
-    if (ch === '.') { events.push({ t, d: unit }); t += unit * 2; }
-    else if (ch === '-') { events.push({ t, d: unit * 3 }); t += unit * 4; }
-    else if (ch === ' ') t += unit * 2;
-    else if (ch === '/') t += unit * 6;
-  }
-  return { events, duration: t };
-}
+const FREQ = 620;    // 摩斯音高
 
 let ctx = null;
 function audioCtx() {
@@ -31,7 +20,7 @@ function audioCtx() {
 /** 播放摩斯串，返回总时长（秒）。 */
 export function playMorse(morse, { freq = FREQ } = {}) {
   const ac = audioCtx();
-  const { events, duration } = timeline(morse);
+  const { events, duration } = morseTimeline(morse);
   for (const ev of events) {
     const osc = ac.createOscillator();
     const gain = ac.createGain();
@@ -72,11 +61,11 @@ export function playSign(sign = 'ssLss', { unit = 0.32, freq = 520 } = {}) {
   return t;
 }
 
-/** 简易波形可视化（Canvas 2D）。 */
-export function drawWave(canvas, morse, { unit = UNIT } = {}) {
-  const g = canvas.getContext('2d');
+/** 简易波形可视化（Canvas 2D）。 @param {HTMLCanvasElement} canvas @param {string} morse @param {{unit?: number}} [opts] */
+export function drawWave(canvas, morse, opts = {}) {
+  const g = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
   const W = canvas.width, H = canvas.height;
-  const { events, duration } = timeline(morse, unit);
+  const { events, duration } = morseTimeline(morse, opts.unit);
   g.clearRect(0, 0, W, H);
   g.fillStyle = '#04070a';
   g.fillRect(0, 0, W, H);

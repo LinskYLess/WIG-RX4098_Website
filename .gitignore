@@ -1,3 +1,7 @@
 node_modules/
 dist/
 *.log
+.zcode/
+/.zcode
+/.zcode/plans
+.zcode/plans/plan-sess_edc8b217-b288-4897-a67b-66bb9fd200e1.md

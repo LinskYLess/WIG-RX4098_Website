@@ -13,7 +13,7 @@
   --line-soft: #1b232e;
   --ink: #d9dfe7;
   --ink-dim: #8b95a3;
-  --ink-faint: #5d6672;
+  --ink-faint: #7a8494; /* 在 --bg 上 ≈5.1:1、--panel 上 ≈4.7:1（WCAG AA，用于小号弱化文字） */
   --amber: #f2a33c;
   --amber-soft: #ffd27a;
   --amber-dim: #8a5f22;
@@ -50,7 +50,6 @@ body::before {
   position: fixed; inset: 0; z-index: 9999;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,0.13) 0 1px, transparent 1px 3px);
   opacity: .35; pointer-events: none;
-  mix-blend-mode: multiply;
 }
 body::after {
   content: "";
@@ -148,6 +147,8 @@ ul, ol { padding-left: 1.5em; }
 li { margin: 4px 0; }
 
 .postscript { color: var(--ink-faint); font-size: 14px; font-family: var(--serif); }
+.tiny { color: var(--ink-faint); }
+.win-body .tiny { color: #444; } /* 浅灰窗体底上的弱化文字（深色 token 在这里反而看不清） */
 .kaomoji { color: var(--ink-dim); }
 .sign { text-align: right; color: var(--ink-dim); font-family: var(--serif); }
 
@@ -191,7 +192,7 @@ li { margin: 4px 0; }
 .win-title .win-btns i { font-style: normal; margin-left: 4px; background: var(--win-face); color: #000; padding: 0 4px; border: 1px solid; border-color: #fff #555 #555 #fff; }
 .win-body { padding: 14px 16px; font: 14.5px/1.75 var(--sans); }
 .win-body p { margin: 0 0 8px; }
-.win-body a { color: #1c47d0; }
+.win-body a { color: #16389e; } /* 在 --win-face 上 ≈5.9:1 */
 .win-body code { background: #efede7; border-color: #c8c4ba; color: #7a2f0e; }
 /* 亮色窗口里的日志/信号面板：白底内嵌 + 近黑文字。
    暗色主题的浅灰字直接透进浅灰窗底会糊成一片；等宽栈的 CJK
@@ -202,6 +203,14 @@ li { margin: 4px 0; }
   margin: 4px 0;
 }
 .win-body pre.win-pre { padding: 10px 12px; }
+.win-body hr { border: none; border-top: 1px dotted #bbb; margin: 14px 0; }
+.win-body.letter-body { font-family: var(--serif); }
+
+/* 留言板签写表单 / 搜索结果容器（从内联样式沉淀） */
+#gb-form { max-width: 560px; }
+#gb-form input, #gb-form textarea { width: 100%; }
+#gb-list { margin-top: 20px; }
+#search-app .search-out { margin-top: 18px; }
 
 /* 9x 按钮/输入（暗页 & 亮窗两态） */
 .btn {
@@ -231,6 +240,11 @@ th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; }
 th { background: var(--panel2); font-family: var(--mono); font-size: 12.5px; color: var(--amber); letter-spacing: .5px; }
 tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
 .table-wrap { overflow-x: auto; }
+/* 视觉隐藏（给已有可见标题的表格补 caption 用） */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.kv-table th { width: 110px; }
+.desk-table th { width: 80px; }
+.rating-cell { white-space: nowrap; color: var(--amber-soft); }
 
 /* ---------------- 门 / ARG 组件 ---------------- */
 
@@ -241,6 +255,7 @@ tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
 .gate.open .gate-title::before { content: "🔓 "; }
 .gate-hint { color: var(--ink-dim); font-size: 13px; margin-top: 10px; }
 .gate-hint button { background: none; border: none; color: var(--amber); cursor: pointer; font-size: 13px; text-decoration: underline dotted; padding: 0; }
+.gate-hint-btn { display: none; } /* 失败两次后由 ui.mjs 显示 */
 .gate-error { color: var(--red); font-size: 13px; margin-top: 8px; min-height: 1em; font-family: var(--mono); }
 
 .block-slot { display: none; }
@@ -265,8 +280,19 @@ body[data-arg-stage="6"] .keeper-hide { display: none; }
   background: repeating-linear-gradient(0deg, rgba(124,227,139,0.04) 0 2px, transparent 2px 4px);
 }
 .terminal .t-in { color: #d9dfe7; text-shadow: none; }
-.terminal .t-dim { color: #5d7364; }
-.terminal .t-amber { color: var(--amber); }
+/* 终端文字工具类（搜索结果/归档查看器也复用，故不限定 .terminal 作用域） */
+.t-dim { color: #6f8f7d; } /* 暗底上 ≈5.4:1 */
+.t-amber { color: var(--amber); }
+/* 灯语交互（/relight/end/） */
+#tap-wave { max-width: 100%; }
+.tap-note { color: var(--ink-faint); font-size: 13px; }
+#tap-fallback { display: none; }
+
+/* 锁定块注入内容的排版 */
+.block-slot h2:first-child, .letter-body h2:first-child { margin-top: 0; }
+.letter-pre { border: none; background: transparent; padding: 0; }
+.rescue-out { margin-top: 8px; width: min(480px, 100%); }
+.about-table th { width: 90px; }
 .terminal .t-err { color: var(--red); }
 .terminal .t-cursor { animation: blink 1s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
@@ -301,6 +327,7 @@ body[data-term="on"] #term-fab, body[data-arg-stage="4"] #term-fab, body[data-ar
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
 figure.gallery-item { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 10px; border-radius: var(--radius); cursor: zoom-in; transition: border-color .2s; }
 figure.gallery-item:hover { border-color: var(--amber-dim); }
+figure.gallery-item:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
 figure.gallery-item img, figure.gallery-item svg { width: 100%; height: auto; display: block; background: #060a0f; }
 figure.gallery-item figcaption { margin-top: 8px; font-size: 13px; color: var(--ink-dim); }
 figure.gallery-item figcaption b { color: var(--ink); font-size: 13.5px; display: block; }
@@ -309,7 +336,9 @@ figure.gallery-item figcaption b { color: var(--ink); font-size: 13.5px; display
 .lightbox.open { display: flex; }
 .lightbox img, .lightbox svg { max-width: min(92vw, 900px); max-height: 78vh; }
 .lightbox .lb-cap { color: var(--ink-dim); margin-top: 14px; font-size: 14px; max-width: 640px; text-align: center; }
-.lightbox .lb-close { position: absolute; top: 16px; right: 20px; font-size: 26px; color: var(--ink-dim); cursor: pointer; border-bottom: none; }
+.lightbox .lb-tip { opacity: .7; margin: 6px 0 0; font-size: 12px; }
+.lightbox .lb-close { position: absolute; top: 16px; right: 20px; width: 44px; height: 44px; font-size: 26px; line-height: 1; color: var(--ink-dim); cursor: pointer; background: none; border: none; padding: 0; }
+.lightbox .lb-close:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
 
 /* ---------------- Toast / Modal ---------------- */
 
@@ -323,12 +352,13 @@ figure.gallery-item figcaption b { color: var(--ink); font-size: 13.5px; display
 @keyframes toast-in { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
 
 /* ---------------- 留言板 ---------------- */
-.gb-entry { border: 1px solid var(--line-soft); border-left: 3px solid var(--line); background: var(--bg2); padding: 12px 16px; margin: 12px 0; border-radius: var(--radius); }
-.gb-entry .gb-head { font: 12px var(--mono); color: var(--ink-faint); margin-bottom: 6px; }
-.gb-entry .gb-head b { color: var(--amber-soft); font-size: 13px; }
+/* 条目卡片：留言板条目（.gb-entry）与博客列表/搜索结果（.entry-card）共用外观 */
+.gb-entry, .entry-card { border: 1px solid var(--line-soft); border-left: 3px solid var(--line); background: var(--bg2); padding: 12px 16px; margin: 12px 0; border-radius: var(--radius); }
+.gb-head { font: 12px var(--mono); color: var(--ink-faint); margin-bottom: 6px; }
+.gb-head b { color: var(--amber-soft); font-size: 13px; }
 .gb-reply { margin-top: 8px; padding: 8px 12px; background: rgba(255,255,255,0.02); border-left: 2px solid var(--amber-dim); color: var(--ink-dim); font-size: 14px; }
 .gb-entry.deleted .gb-text { color: var(--ink-faint); text-decoration: line-through; }
-.gb-entry.firefly { border-left-color: var(--amber); background: rgba(242,163,60,0.05); }
+.gb-entry.firefly, .entry-card.firefly { border-left-color: var(--amber); background: rgba(242,163,60,0.05); }
 
 /* ---------------- 首页 Hero ---------------- */
 .hero {
@@ -338,6 +368,11 @@ figure.gallery-item figcaption b { color: var(--ink); font-size: 13.5px; display
 }
 .hero .hero-lamp { flex: 0 0 84px; }
 .hero .hero-lamp svg { width: 84px; height: 84px; }
+/* 首页灯珠呼吸（原为 SMIL，改 CSS 以纳入全局 reduced-motion 覆盖） */
+.hero-bulb { animation: hero-bulb 3.2s ease-in-out infinite; }
+@keyframes hero-bulb { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.hero-halo { stroke-opacity: .5; animation: hero-halo 3.2s ease-in-out infinite; }
+@keyframes hero-halo { 0%, 100% { r: 3; stroke-opacity: .5; } 50% { r: 6.5; stroke-opacity: 0; } }
 .hero h1 { margin: 0 0 6px; border: none; padding: 0; }
 .hero p { color: var(--ink-dim); margin: 0; font-family: var(--serif); }
 .hero .hero-note { font: 12px var(--mono); color: var(--ink-faint); margin-top: 10px; }
@@ -358,14 +393,14 @@ figure.gallery-item figcaption b { color: var(--ink); font-size: 13.5px; display
 .morse-tapper { display: flex; gap: 10px; align-items: center; margin: 12px 0; flex-wrap: wrap; }
 .morse-display { font: 22px var(--mono); letter-spacing: 4px; color: var(--amber-soft); min-height: 34px; min-width: 200px; }
 
-/* 像素萤火（Konami 彩蛋） */
-#firefly-fx { position: fixed; z-index: 1200; pointer-events: none; font-size: 14px; color: var(--amber-soft); text-shadow: 0 0 8px var(--amber); animation: flyby 6s linear forwards; }
-@keyframes flyby { 0% { left: -40px; top: 62%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { left: 104vw; top: 35%; opacity: 0; } }
+/* 像素萤火（Konami 彩蛋）—— 位移走 transform，避免逐帧 layout */
+#firefly-fx { position: fixed; left: 0; top: 0; z-index: 1200; pointer-events: none; font-size: 14px; color: var(--amber-soft); text-shadow: 0 0 8px var(--amber); animation: flyby 6s linear forwards; }
+@keyframes flyby { 0% { transform: translate(-40px, 62vh); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(104vw, 35vh); opacity: 0; } }
 
 /* ---------------- 页脚 ---------------- */
 .site-footer { border-top: 1px solid var(--line); padding: 22px 20px 30px; text-align: center; color: var(--ink-faint); font-size: 13px; }
 .site-footer p { margin: 4px 0; }
-.site-footer .tiny { font-size: 11.5px; color: #454e59; }
+.site-footer .tiny { font-size: 11.5px; color: var(--ink-faint); }
 .site-footer a { color: var(--ink-faint); border-bottom: none; text-decoration: underline dotted; }
 
 /* ---------------- 响应式 ---------------- */
@@ -429,5 +464,9 @@ figure.gallery-item figcaption b { color: var(--ink); font-size: 13.5px; display
 }
 body.signal-flash { animation: signal-flash .45s linear; }
 
-/* /old/relight 门与 wiki 在 main.css 语境下的兜底（old.css 也有） */
-.old-body .gate-error { color: #c0392b; font-size: 13px; }
+/* 触屏设备加大触控目标（WCAG 2.5.8 建议 ≥44px；桌面观感不变） */
+@media (pointer: coarse) {
+  .btn { padding: 10px 18px; }
+  #arch-tree .arch-file { padding: 9px 10px; font-size: 14px; }
+  .gate-hint button { padding: 8px 10px; }
+}

@@ -36,7 +36,7 @@ export const PAGES = [
   { out: 'search/index.html', render: () => arch.renderSearch() },
 
   // 旧网层
-  { out: 'logs/index.html', render: () => logs.render() },
+  { out: 'logs/index.html', render: (now) => logs.render(now) },
   { out: 'old/index.html', render: () => old.renderOldIndex() },
   { out: 'old/relight/index.html', render: () => old.renderOldRelight() },
 

@@ -1,27 +1,13 @@
 /** page-home.mjs — 首页。 */
 
-import { layoutMain, esc } from './layout.mjs';
+import { layoutMain, esc, lampSvg } from './layout.mjs';
 import { POSTS } from '../content/blog.mjs';
 
 export function render() {
   const latest = POSTS.filter((p) => p.date >= '2022').sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6);
   const content = `
 <section class="hero">
-  <div class="hero-lamp">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <defs><radialGradient id="hg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd27a"/><stop offset="60%" stop-color="#f2a33c"/><stop offset="100%" stop-color="#7a4a12"/></radialGradient></defs>
-      <rect x="10.5" y="12" width="3" height="9" fill="#8b95a3"/>
-      <rect x="7" y="21" width="10" height="1.6" fill="#5b6068"/>
-      <rect x="8.5" y="6" width="7" height="3.5" fill="#26303b"/>
-      <circle cx="12" cy="7.75" r="2.6" fill="url(#hg)">
-        <animate attributeName="opacity" values="0.55;1;0.55" dur="3.2s" repeatCount="indefinite"/>
-      </circle>
-      <circle cx="12" cy="7.75" r="5.5" fill="none" stroke="#f2a33c" stroke-opacity="0.3">
-        <animate attributeName="r" values="3;6.5;3" dur="3.2s" repeatCount="indefinite"/>
-        <animate attributeName="stroke-opacity" values="0.5;0;0.5" dur="3.2s" repeatCount="indefinite"/>
-      </circle>
-    </svg>
-  </div>
+  <div class="hero-lamp">${lampSvg({ variant: 'hero' })}</div>
   <div>
     <h1>欢迎来到我的杂物间</h1>
     <p>我是 RX4098，运维，装机八年级，一个已经关闭的游戏的遗民。这里放着我的装机单、游戏收藏、老软件和一点没关的灯。</p>
@@ -32,7 +18,7 @@ export function render() {
 
 <h2>最新日志</h2>
 ${latest.map((p) => `
-<article class="gb-entry">
+<article class="entry-card">
   <div class="gb-head">${p.date}${p.tags.map((t) => ` <span class="tag">${esc(t)}</span>`).join('')}</div>
   <a href="/blog/${p.slug}/"><b>${esc(p.title)}</b></a>
   <p>${esc(p.summary)}</p>

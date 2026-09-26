@@ -123,6 +123,132 @@ export function moonIslandPng() {
   });
 }
 
+/* ---------------- og-image 与图标 ---------------- */
+
+/** 5x7 像素字体（og-image 用，按需收录字符）。 */
+const GLYPHS = {
+  R: ['11110', '10001', '10001', '11110', '10100', '10010', '10001'],
+  X: ['10001', '10001', '01010', '00100', '01010', '10001', '10001'],
+  4: ['00010', '00110', '01010', '10010', '11111', '00010', '00010'],
+  0: ['01110', '10001', '10011', '10101', '11001', '10001', '01110'],
+  9: ['01110', '10001', '10001', '01111', '00001', '00010', '01100'],
+  8: ['01110', '10001', '10001', '01110', '10001', '10001', '01110'],
+  E: ['11111', '10000', '11110', '10000', '10000', '10000', '11111'],
+  S: ['01111', '10000', '10000', '01110', '00001', '00001', '11110'],
+  T: ['11111', '00100', '00100', '00100', '00100', '00100', '00100'],
+  2: ['01110', '10001', '00001', '00010', '00100', '01000', '11111'],
+  '.': ['00000', '00000', '00000', '00000', '00000', '01100', '01100'],
+  ' ': ['00000', '00000', '00000', '00000', '00000', '00000', '00000'],
+};
+
+/** 返回判定 (x,y) 是否落在文字笔画内的函数。 */
+function textTest(text, tx0, ty0, sc) {
+  return (x, y) => {
+    let cx = tx0;
+    for (const ch of text) {
+      const g = GLYPHS[ch] ?? GLYPHS[' '];
+      if (x >= cx && x < cx + 5 * sc && y >= ty0 && y < ty0 + 7 * sc) {
+        if (g[Math.floor((y - ty0) / sc)][Math.floor((x - cx) / sc)] === '1') return true;
+      }
+      cx += 6 * sc;
+    }
+    return false;
+  };
+}
+
+const clamp8 = (v) => Math.max(0, Math.min(255, v | 0));
+
+/**
+ * 1200x630 社交分享图：夜海 + 大月亮 + 灯塔光束 + 像素字 "RX4098 / EST. 2022"。
+ * 色板与 main.css 同源（#0b0f14 底、#f2a33c 萤火琥珀）。
+ */
+export function ogImagePng() {
+  const W = 1200, H = 630;
+  const rand = (seed => () => ((seed = (seed * 16807) % 2147483647) / 2147483647))(621621);
+  const noise = new Float64Array(W * H);
+  for (let i = 0; i < noise.length; i++) noise[i] = rand();
+  const horizon = 430;
+  const moon = { x: 920, y: 130, r: 64 };
+  const lamp = { x: 830, y: 222 };   // 灯室中心
+  const title = textTest('RX4098', 84, 466, 12);
+  const sub = textTest('EST. 2022', 88, 578, 5);
+  // 光束：单位方向向量 + 点到射线距离
+  const beams = [[-0.93, -0.37, 700, 52], [0.95, -0.31, 640, 46]]; // [dx, dy, 长度, 半宽]
+  return encodePng(W, H, (x, y) => {
+    const n = noise[y * W + x] - 0.5;
+    let r, g, b;
+    if (y < horizon) {
+      const t = y / horizon;
+      r = 7 + t * 24 + n * 4; g = 10 + t * 30 + n * 4; b = 20 + t * 46 + n * 5;
+      // 星星：两层亮度，避开月亮
+      const dm0 = Math.hypot(x - moon.x, y - moon.y);
+      if (dm0 > moon.r + 8) {
+        if ((x * 31 + y * 17 + 6) % 997 === 0) { r = 150; g = 158; b = 172; }
+        else if ((x * 73 + y * 29 + 41) % 4993 === 0) { r = 214; g = 220; b = 232; }
+      }
+    } else {
+      const wave = Math.sin(x / 7 + y / 3.4) * 4;
+      r = 8 + n * 5; g = 16 + n * 5; b = 30 + n * 6;
+      if (Math.abs(x - moon.x + wave) < 3 + (y - horizon) * 0.22) { r = 105; g = 98; b = 70; } // 月光带
+    }
+    // 月亮 + 月晕
+    const dm = Math.hypot(x - moon.x, y - moon.y);
+    if (dm < moon.r) { const t = 1 - dm / moon.r; r = 232 + t * 23; g = 226 + t * 24; b = 198 + t * 34; }
+    else if (dm < moon.r + 9) { const t = (moon.r + 9 - dm) / 9; r += 26 * t; g += 24 * t; b += 18 * t; }
+    // 光束（叠加发光）
+    for (const [dx, dy, len, half] of beams) {
+      const t = (x - lamp.x) * dx + (y - lamp.y) * dy;
+      if (t > 0 && t < len) {
+        const d = Math.hypot(x - (lamp.x + dx * t), y - (lamp.y + dy * t));
+        if (d < half) {
+          const f = (1 - d / half) * (1 - t / len) * (d < 4 ? 1 : 0.7);
+          r += 120 * f; g += 78 * f; b += 26 * f;
+        }
+      }
+    }
+    // 灯室辉光
+    const dl = Math.hypot(x - lamp.x, y - lamp.y);
+    if (dl < 110) { const f = (1 - dl / 110) ** 2 * 0.9; r += 90 * f; g += 58 * f; b += 18 * f; }
+    // 像素字（画在场景之上）
+    if (title(x, y)) { r = 242; g = 163; b = 60; }
+    else if (sub(x, y)) { r = 176; g = 122; b = 52; }
+    // 岛与灯塔（遮挡光束）
+    const onIsland = x >= 640 && x <= 1160 && y >= horizon - 22 && y < horizon;
+    if (onIsland) { const c = 6 + n * 3; return [c, c + 2, c + 6]; }
+    if (y >= 238 && y < horizon) {
+      const w = 46 + ((y - 238) / (horizon - 238)) * 34;   // 塔身上窄下宽
+      if (x >= lamp.x - w / 2 && x <= lamp.x + w / 2) {
+        const c = 10 + n * 3;
+        if ((y > 300 && y < 306) || (y > 362 && y < 368)) return [26, 28, 34]; // 层间平台
+        return [c, c + 2, c + 5];
+      }
+    }
+    if (y >= 210 && y < 238 && x >= lamp.x - 20 && x <= lamp.x + 20) return [242, 163, 60]; // 灯室
+    if (y >= 188 && y < 210) { const hw = 30 - (y - 188) * 1.1; if (x >= lamp.x - hw && x <= lamp.x + hw) return [15, 15, 19]; } // 顶帽
+    return [clamp8(r), clamp8(g), clamp8(b)];
+  });
+}
+
+/** 灯塔灯室图标（无透明通道：深色圆角观感底 + 萤火琥珀灯珠）。size 取 32（favicon）或 180（apple-touch-icon）。 */
+export function lampIconPng(size) {
+  const c = size / 2;
+  const R = size * 0.47;
+  const lampY = size * 0.44;
+  const lampR = size * 0.2;
+  return encodePng(size, size, (x, y) => {
+    const d = Math.hypot(x - c, y - c);
+    if (d > R) return [0, 0, 0];
+    const t = y / size;
+    let r = 10 + t * 6, g = 14 + t * 7, b = 22 + t * 10;
+    const dl = Math.hypot(x - c, y - lampY);
+    if (dl < lampR * 2.1) { const f = (1 - dl / (lampR * 2.1)) ** 2; r += 70 * f; g += 44 * f; b += 12 * f; }
+    if (dl < lampR) { const k = 1 - dl / lampR; r = 242 + k * 13; g = 163 + k * 42; b = 60 + k * 24; }
+    const dw = Math.abs(y - (lampY + lampR * 1.9));
+    if (dw < size * 0.035 && Math.abs(x - c) < size * 0.16) { r = 122; g = 128; b = 138; } // 底座
+    return [clamp8(r), clamp8(g), clamp8(b)];
+  });
+}
+
 /* ---------------- 资产写出 ---------------- */
 
 export function writeAssets(distDir) {
@@ -150,9 +276,20 @@ export function writeAssets(distDir) {
   writeFileSync(pngPath, full);
   files.push(pngPath);
 
-  // 灯语测试 WAV（摩斯 CQ）
+  // og-image + favicon 位图回退
+  const ogPath = join(distDir, 'og-image.png');
+  writeFileSync(ogPath, ogImagePng());
+  files.push(ogPath);
+  const favPngPath = join(distDir, 'favicon.png');
+  writeFileSync(favPngPath, lampIconPng(32));
+  files.push(favPngPath);
+  const touchPath = join(distDir, 'apple-touch-icon.png');
+  writeFileSync(touchPath, lampIconPng(180));
+  files.push(touchPath);
+
+  // 灯语测试 WAV（摩斯 CQ）—— morseToPcm 默认 unit=0.14，与 audio.mjs 播放同源
   const morse = textToMorse('CQ');
-  const { pcm, rate } = morseToPcm(morse, { unit: 0.14 });
+  const { pcm, rate } = morseToPcm(morse);
   const wavPath = join(distDir, 'tmp', 'signal-test.wav');
   mkdirSync(dirname(wavPath), { recursive: true });
   writeFileSync(wavPath, pcmToWav(pcm, rate));

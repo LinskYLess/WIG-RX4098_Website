@@ -5,11 +5,17 @@
 import { get, addFound, stage } from './state.mjs';
 import { toast, initUi } from './ui.mjs';
 import { initTerminal, initCountdown } from './terminal.mjs';
-import { initGallery } from './gallery.mjs';
-import { initSearch } from './search.mjs';
-import { initGuestbook } from './guestbook.mjs';
-import { initRelight, initEnd } from './relight.mjs';
-import { initArchive } from './archive.mjs';
+
+// 页面特有模块按需加载：宿主元素存在才拉取对应模块，
+// 404/about 这类页面不再下载用不到的 JS。终端是全站 chrome（FAB），保持静态引入。
+/** @type {[sel: string, load: () => Promise<unknown>][]} */
+const LAZY_INITS = [
+  ['.gallery-grid', () => import('./gallery.mjs').then((m) => m.initGallery())],
+  ['#search-app', () => import('./search.mjs').then((m) => m.initSearch())],
+  ['#gb-form', () => import('./guestbook.mjs').then((m) => m.initGuestbook())],
+  ['#tapper, #rescue-btn, #end-cq', () => import('./relight.mjs').then((m) => { m.initRelight(); m.initEnd(); })],
+  ['#arch-tree', () => import('./archive.mjs').then((m) => m.initArchive())],
+];
 
 const UPTIME_FROM = Date.UTC(2022, 3, 5); // 2022-04-05
 
@@ -90,16 +96,23 @@ function initKeeper() {
 /** webring/robots 等发现型链接：点击即记 found。 */
 function initFoundLinks() {
   document.querySelectorAll('[data-found]').forEach((a) => {
-    a.addEventListener('click', () => addFound(/** @type {HTMLElement} */ (a).dataset.found));
+    a.addEventListener('click', () => {
+      const id = /** @type {HTMLElement} */ (a).dataset.found;
+      if (id) addFound(id);
+    });
   });
 }
 
 const start = () => {
   // 每个初始化器独立容错：单点失败不拖垮页面其余的 ARG 行为
   const inits = [initStatusbar, initLamp, init404, initKonami, initKeeper, initFoundLinks,
-    initUi, initTerminal, initCountdown, initGallery, initSearch, initGuestbook, initRelight, initEnd, initArchive];
+    initUi, initTerminal, initCountdown];
   for (const fn of inits) {
     try { fn(); } catch (e) { console.warn(`[rx4098] ${fn.name} failed:`, e); }
+  }
+  for (const [sel, load] of LAZY_INITS) {
+    if (!document.querySelector(sel)) continue;
+    load().catch((e) => console.warn(`[rx4098] lazy init ${sel} failed:`, e));
   }
 };
 
