@@ -38,7 +38,7 @@ function panelHtml() {
   <div class="win">
     <div class="win-title"><span>HONEYPOT — 信号记录</span></div>
     <div class="win-body">
-      <pre style="border:none;background:transparent;padding:0">${esc(HONEYPOT_LINES)}</pre>
+      <pre class="win-pre">${esc(HONEYPOT_LINES)}</pre>
     </div>
   </div>
 

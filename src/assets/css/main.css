@@ -193,11 +193,15 @@ li { margin: 4px 0; }
 .win-body p { margin: 0 0 8px; }
 .win-body a { color: #1c47d0; }
 .win-body code { background: #efede7; border-color: #c8c4ba; color: #7a2f0e; }
-/* 亮色窗口里的 pre：沿用暗色主题会变成浅灰字配浅灰底，必须翻转成深墨色 */
+/* 亮色窗口里的日志/信号面板：白底内嵌 + 近黑文字。
+   暗色主题的浅灰字直接透进浅灰窗底会糊成一片；等宽栈的 CJK
+   回退还会掉进点阵宋体——这里连字体栈一起覆盖。 */
 .win-body pre {
-  background: transparent; border: none; border-left: none;
-  color: #26221b; font: 13.5px/1.8 var(--mono); margin: 4px 0;
+  background: #f7f5ef; border: 1px solid #b3afa5; border-left: 1px solid #b3afa5;
+  color: #17140f; font: 14px/1.85 "Cascadia Mono", Consolas, "Microsoft YaHei", "PingFang SC", monospace;
+  margin: 4px 0;
 }
+.win-body pre.win-pre { padding: 10px 12px; }
 
 /* 9x 按钮/输入（暗页 & 亮窗两态） */
 .btn {

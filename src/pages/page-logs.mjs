@@ -12,12 +12,12 @@ export function render() {
 
 <div class="win">
   <div class="win-title"><span>beacon.log — 心跳</span><span class="win-btns"><i>_</i><i>□</i><i>×</i></span></div>
-  <div class="win-body"><pre style="border:none;background:transparent;padding:0">${esc(beacon)}</pre></div>
+  <div class="win-body"><pre class="win-pre">${esc(beacon)}</pre></div>
 </div>
 
 <div class="win">
   <div class="win-title"><span>server.log — 访问摘录</span><span class="win-btns"><i>_</i><i>□</i><i>×</i></span></div>
-  <div class="win-body"><pre style="border:none;background:transparent;padding:0">${esc(server)}</pre></div>
+  <div class="win-body"><pre class="win-pre">${esc(server)}</pre></div>
 </div>
 
 <div class="notice">
