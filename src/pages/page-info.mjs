@@ -59,7 +59,7 @@ export function renderNow() {
   <li>在学：现代前端（学完就忘，忘完再学）</li>
   <li>在值守：一台树莓派。它比我勤快</li>
 </ul>
-<p>此页灵感来自旧网时代的 "now page" 传统。链接就不放了，免得你点出去回不来</p>`;
+<p>此页灵感来自 <a href="https://nownownow.com/" rel="nofollow">/now page movement</a>（这个链接指向的网站真实存在，与本站及站内的一切虚构无关——去看看可以，请勿打扰）</p>`;
   return layoutMain({ title: '现在', active: '/now/', content });
 }
 
