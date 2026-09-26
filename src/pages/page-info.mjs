@@ -112,6 +112,14 @@ export function renderLicense() {
 </div>
 
 <div class="win">
+  <div class="win-title"><span>AI — 人工智能使用声明</span></div>
+  <div class="win-body">
+    <p>本项目的开发过程使用了 AI 编程助手：代码、测试、文档与部分站内文本有 AI 参与撰写；创意方向、世界观设定、谜题设计、最终取舍与审核由人类作者完成，并对本仓库的全部内容负责。</p>
+    <p>AI 参与产出的部分同样以 <strong>MIT License</strong> 开源。人类的固执还在——只是打字快了一点。</p>
+  </div>
+</div>
+
+<div class="win">
   <div class="win-title"><span>NOTES — 其他</span></div>
   <div class="win-body">
     <p>· 本站无后端、无统计、无 Cookie：进度只存在你自己的浏览器 <code>localStorage</code> 里。</p>
